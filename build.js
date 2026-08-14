@@ -578,7 +578,7 @@ const pkgIndepJson = {
     license: "MIT",
     repository: {
         type: "git",
-        url: "https://github.com/DevCodeHub99/event-overlay.git",
+        url: "git+https://github.com/DevCodeHub99/event-overlay.git",
         directory: "packages/independence-day"
     }
 };
@@ -700,7 +700,7 @@ const pkgHoliJson = {
     license: "MIT",
     repository: {
         type: "git",
-        url: "https://github.com/DevCodeHub99/event-overlay.git",
+        url: "git+https://github.com/DevCodeHub99/event-overlay.git",
         directory: "packages/holi"
     }
 };
@@ -790,7 +790,7 @@ const pkgCoreJson = {
     license: "MIT",
     repository: {
         type: "git",
-        url: "https://github.com/DevCodeHub99/event-overlay.git",
+        url: "git+https://github.com/DevCodeHub99/event-overlay.git",
         directory: "packages/core"
     }
 };
