@@ -1,6 +1,6 @@
 {
   "name": "@event-overlay/core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "🎆 High-performance celebration overlay engine with tree-shakeable event subpaths. Zero dependencies.",
   "main": "dist/event-overlay.cjs",
   "module": "dist/event-overlay.js",
