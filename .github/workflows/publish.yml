@@ -16,6 +16,9 @@ jobs:
   publish-npm:
     name: Publish Packages via Tokenless OIDC
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -29,10 +32,16 @@ jobs:
         run: node build.js
 
       - name: Publish @event-overlay/independence-day
-        run: npm publish ./packages/independence-day --access public --provenance
+        run: |
+          cd packages/independence-day
+          npm publish --access public --provenance
 
       - name: Publish @event-overlay/holi
-        run: npm publish ./packages/holi --access public --provenance
+        run: |
+          cd packages/holi
+          npm publish --access public --provenance
 
       - name: Publish @event-overlay/core
-        run: npm publish ./packages/core --access public --provenance
+        run: |
+          cd packages/core
+          npm publish --access public --provenance
