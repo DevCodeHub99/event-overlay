@@ -53,7 +53,7 @@
     ],
     "scripts": {
         "build": "node build.js",
-        "dev": "npx -y http-server . -p 3000 -o /demo.html",
+        "dev": "npx -y http-server . -p 3000 -o /index.html",
         "publish:independence-day": "npm publish ./packages/independence-day --access public",
         "publish:holi": "npm publish ./packages/holi --access public",
         "publish:core": "npm publish ./packages/core --access public",
