@@ -31,17 +31,5 @@ jobs:
       - name: Build Monorepo & Distributions
         run: node build.js
 
-      - name: Publish @event-overlay/independence-day
-        run: |
-          cd packages/independence-day
-          npm publish --access public --provenance
-
-      - name: Publish @event-overlay/holi
-        run: |
-          cd packages/holi
-          npm publish --access public --provenance
-
-      - name: Publish @event-overlay/core
-        run: |
-          cd packages/core
-          npm publish --access public --provenance
+      - name: Publish All Monorepo Workspaces to NPM
+        run: npm publish --workspaces --access public --provenance
