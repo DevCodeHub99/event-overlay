@@ -79,7 +79,7 @@
         "url": "https://github.com/DevCodeHub99/event-overlay.git"
     },
     "publishConfig": {
-        "registry": "https://npm.pkg.github.com/"
+        "access": "public"
     },
     "homepage": "https://github.com/DevCodeHub99/event-overlay#readme",
     "bugs": {
