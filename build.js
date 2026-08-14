@@ -18,6 +18,9 @@ const SRC_DIR = path.join(__dirname, 'src');
 const DIST_DIR = path.join(__dirname, 'dist');
 const PACKAGES_DIR = path.join(__dirname, 'packages');
 
+const rootPkg = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf-8'));
+const CURRENT_VERSION = rootPkg.version || '1.0.0';
+
 // Recreate dist and packages directories
 [DIST_DIR, PACKAGES_DIR].forEach(dir => {
     if (fs.existsSync(dir)) {
@@ -547,7 +550,7 @@ fs.writeFileSync(path.join(pkgIndepDir, 'LICENSE'), licenseText, 'utf-8');
 
 const pkgIndepJson = {
     name: "@event-overlay/independence-day",
-    version: "1.0.0",
+    version: CURRENT_VERSION,
     description: "🇮🇳 Lightweight, high-performance Indian Independence Day celebration overlay. Zero dependencies.",
     main: "dist/index.cjs",
     module: "dist/index.js",
@@ -669,7 +672,7 @@ fs.writeFileSync(path.join(pkgHoliDir, 'LICENSE'), licenseText, 'utf-8');
 
 const pkgHoliJson = {
     name: "@event-overlay/holi",
-    version: "1.0.0",
+    version: CURRENT_VERSION,
     description: "🎨 Vibrant, high-performance Holi festival celebration overlay. Zero dependencies.",
     main: "dist/index.cjs",
     module: "dist/index.js",
@@ -753,7 +756,7 @@ fs.writeFileSync(path.join(pkgCoreDir, 'LICENSE'), licenseText, 'utf-8');
 
 const pkgCoreJson = {
     name: "@event-overlay/core",
-    version: "1.0.0",
+    version: CURRENT_VERSION,
     description: "🎆 High-performance celebration overlay engine with tree-shakeable event subpaths. Zero dependencies.",
     main: "dist/event-overlay.cjs",
     module: "dist/event-overlay.js",
