@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   publish-npm:
-    name: Publish Packages to NPM
+    name: Publish Packages via OIDC Trusted Publisher
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -31,15 +31,9 @@ jobs:
 
       - name: Publish @event-overlay/independence-day
         run: npm publish ./packages/independence-day --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish @event-overlay/holi
         run: npm publish ./packages/holi --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish @event-overlay/core
         run: npm publish ./packages/core --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
