@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎆 Event Overlay — High Performance Multi-Event Celebration Framework</title>
+    <meta name="description" content="A lightweight, high-performance HTML5 Canvas celebration overlay framework with tree-shakeable subpaths for Independence Day, Holi, and custom festive events.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #06080F;
+            --card-bg: rgba(13, 18, 36, 0.72);
+            --card-border: rgba(255, 255, 255, 0.09);
+            --card-border-hover: rgba(255, 255, 255, 0.18);
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --accent-saffron: #FF9933;
+            --accent-green: #138808;
+            --accent-blue: #38BDF8;
+            --accent-purple: #A855F7;
+            --accent-pink: #EC4899;
+            --accent-gold: #FBBF24;
+            --radius-lg: 20px;
+            --radius-md: 14px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ambient background glow */
+        .ambient-mesh {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 15% 15%, rgba(255, 153, 51, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(19, 136, 8, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 50% 30%, rgba(56, 189, 248, 0.05) 0%, transparent 55%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(6, 8, 15, 0.75);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 12px 24px;
+        }
+
+        .nav-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: #FFFFFF;
+            letter-spacing: -0.01em;
+        }
+
+        .brand-version {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.12);
+            padding: 2px 7px;
+            border-radius: 6px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-gh-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 16px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 700;
+            transition: all 0.2s ease;
+        }
+
+        .nav-gh-link:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .nav-doc-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            padding: 7px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-doc-link:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 36px 24px 80px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Hero Header */
+        header {
+            text-align: center;
+            margin-bottom: 44px;
+        }
+
+        .pill-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: #CBD5E1;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(12px);
+        }
+
+        .pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10B981;
+            box-shadow: 0 0 10px #10B981;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.75); }
+        }
+
+        h1 {
+            font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 14px;
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, #FF9933 0%, #FFFFFF 50%, #138808 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.4s ease;
+        }
+
+        h1.holi-theme {
+            background: linear-gradient(135deg, #FF1493 0%, #FFD700 35%, #00BFFF 70%, #32CD32 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p.hero-desc {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 720px;
+            margin: 0 auto 32px;
+            line-height: 1.6;
+        }
+
+        /* Segmented Event Switcher */
+        .event-nav-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 36px;
+        }
+
+        .event-nav {
+            display: inline-flex;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 5px;
+            gap: 6px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .nav-btn {
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.98rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-secondary);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-btn.active {
+            background: #FFFFFF;
+            color: #0B1120;
+            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.25);
+        }
+
+        /* Main Workspace Studio */
+        .studio-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 48px;
+            align-items: stretch;
+        }
+
+        @media (max-width: 980px) {
+            .studio-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            backdrop-filter: blur(24px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.25s ease;
+        }
+
+        .glass-card:hover {
+            border-color: var(--card-border-hover);
+        }
+
+        .card-header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .card-heading {
+            font-size: 1.22rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #FFFFFF;
+            letter-spacing: -0.01em;
+        }
+
+        .badge-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 4px 10px;
+            border-radius: 9999px;
+        }
+
+        /* Preset Chips */
+        .presets-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 22px;
+        }
+
+        .preset-btn {
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.84rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #CBD5E1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .preset-btn:hover {
+            background: rgba(255, 255, 255, 0.09);
+            color: #FFFFFF;
+            transform: translateY(-1px);
+        }
+
+        .preset-btn.active {
+            background: rgba(56, 189, 248, 0.16);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            font-weight: 700;
+        }
+
+        /* Controls Grid */
+        .controls-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            flex: 1;
+        }
+
+        .control-row {
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            transition: background 0.2s ease;
+        }
+
+        .control-row:hover {
+            background: rgba(255, 255, 255, 0.045);
+        }
+
+        .control-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .control-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #E2E8F0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-val-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.12);
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        /* Sliders */
+        input[type="range"] {
+            width: 100%;
+            height: 5px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.12);
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #38BDF8;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+            transition: transform 0.15s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.25);
+        }
+
+        /* Action Buttons */
+        .actions-toolbar {
+            display: flex;
+            gap: 12px;
+            margin-top: 22px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-brand {
+            background: linear-gradient(135deg, var(--accent-blue), #0284C7);
+            color: #04101E;
+            box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
+        }
+
+        .btn-brand:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        /* Integration Console */
+        .code-deck {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .code-tabs-bar {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 8px;
+        }
+
+        .tab-switch {
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .tab-switch:hover {
+            color: #FFFFFF;
+        }
+
+        .tab-switch.active {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .code-viewport {
+            position: relative;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        pre {
+            background: #030509;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #7DD3FC;
+            overflow-x: auto;
+            line-height: 1.65;
+            flex: 1;
+        }
+
+        .copy-pill {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #CBD5E1;
+            border-radius: 8px;
+            padding: 5px 12px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-pill:hover {
+            background: rgba(255, 255, 255, 0.22);
+            color: #FFFFFF;
+        }
+
+        /* Quick Feature Tags */
+        .meta-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .meta-tag {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        /* Documentation Reference */
+        .docs-block {
+            margin-top: 56px;
+        }
+
+        .docs-title-wrap {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .docs-title-wrap h2 {
+            font-size: 2.1rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .docs-title-wrap p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        /* Table */
+        .table-shell {
+            overflow-x: auto;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--card-border);
+            background: rgba(10, 14, 28, 0.7);
+            margin-bottom: 36px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 14px 18px;
+            font-weight: 700;
+            color: #F1F5F9;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        td {
+            padding: 13px 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: #CBD5E1;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .prop-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: #93C5FD;
+        }
+
+        .type-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--accent-pink);
+            background: rgba(236, 72, 153, 0.12);
+            padding: 2px 7px;
+            border-radius: 5px;
+        }
+
+        .val-default {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-gold);
+        }
+
+        /* Architecture Card */
+        .custom-arch-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            backdrop-filter: blur(20px);
+            margin-top: 24px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 64px;
+            padding: 32px 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-mesh"></div>
+
+    <!-- Top Promo Navigation Bar -->
+    <nav class="top-nav-bar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="brand-icon">🎆</span>
+                <span class="brand-title">event-overlay</span>
+                <span class="brand-version">v1.0.0</span>
+            </div>
+            <div class="nav-links">
+                <a href="https://github.com/DevCodeHub99/event-overlay" target="_blank" rel="noopener noreferrer" class="nav-gh-link">
+                    <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                    </svg>
+                    <span>⭐ Star on GitHub</span>
+                </a>
+                <a href="https://github.com/DevCodeHub99/event-overlay#readme" target="_blank" rel="noopener noreferrer" class="nav-doc-link">
+                    <span>📖 Docs</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="pill-badge">
+                <span class="pulse-dot"></span>
+                <span>Open Source • Zero Dependencies</span>
+                <a href="https://github.com/DevCodeHub99/event-overlay" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none; margin-left: 6px; font-weight: 700; color: #38BDF8;">GitHub ↗</a>
+            </div>
+            <h1 id="heroTitle">Independence Day Overlay</h1>
+            <p class="hero-desc" id="heroSubtitle">A lightweight, high-performance canvas celebration framework with tree-shakeable event subpaths for Independence Day, Holi, and custom festive celebrations.</p>
+
+            <!-- Event Switcher -->
+            <div class="event-nav-wrap">
+                <div class="event-nav">
+                    <button class="nav-btn active" data-event="independence-day">
+                        <span>🇮🇳</span>
+                        <span>Independence Day</span>
+                    </button>
+                    <button class="nav-btn" data-event="holi">
+                        <span>🎨</span>
+                        <span>Holi Festival</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Studio -->
+        <main>
+            <div class="studio-grid">
+                <!-- Control Deck -->
+                <div class="glass-card">
+                    <div class="card-header-bar">
+                        <h2 class="card-heading">⚙️ Control Deck</h2>
+                        <span class="badge-hint">💡 Click canvas to burst!</span>
+                    </div>
+
+                    <!-- Presets -->
+                    <div class="presets-row" id="presetsBar"></div>
+
+                    <!-- Dynamic Sliders List -->
+                    <div class="controls-list" id="dynamicControls"></div>
+
+                    <!-- Action Buttons -->
+                    <div class="actions-toolbar">
+                        <button class="action-btn btn-brand" id="btnToggle">Pause Overlay</button>
+                        <button class="action-btn btn-outline" id="btnRestart">Apply & Restart</button>
+                    </div>
+                </div>
+
+                <!-- Integration Hub -->
+                <div class="glass-card">
+                    <div class="card-header-bar">
+                        <h2 class="card-heading">📦 Tree-Shakeable Integration</h2>
+                    </div>
+
+                    <div class="code-deck">
+                        <div class="code-tabs-bar">
+                            <button class="tab-switch active" data-lang="react">React / Next.js</button>
+                            <button class="tab-switch" data-lang="esm">Vanilla ESM</button>
+                            <button class="tab-switch" data-lang="cdn">HTML CDN</button>
+                            <button class="tab-switch" data-lang="tsx">Standalone TSX</button>
+                        </div>
+
+                        <div class="code-viewport">
+                            <button class="copy-pill" id="btnCopy">Copy Code</button>
+                            <pre><code id="codeSnippet"></code></pre>
+                        </div>
+
+                        <div class="meta-badges">
+                            <span class="meta-tag">⚡ ~12KB Gzipped</span>
+                            <span class="meta-tag">🔒 Zero Dependencies</span>
+                            <span class="meta-tag">🖥️ HiDPI Retina Crisp</span>
+                            <span class="meta-tag">♿ Reduced-Motion Aware</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complete API Reference -->
+            <section class="docs-block">
+                <div class="docs-title-wrap">
+                    <h2>📚 Configuration Options</h2>
+                    <p>Customize every animation and visual layer to perfectly fit your application.</p>
+                </div>
+
+                <div class="table-shell">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Option / Prop</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="optionsTableBody"></tbody>
+                    </table>
+                </div>
+
+                <!-- Custom Events Tutorial -->
+                <div class="custom-arch-card">
+                    <h2 class="card-heading" style="margin-bottom: 12px;">🔌 Plug & Play Custom Event Creation</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 18px; font-size: 0.94rem;">
+                        The kernel architecture allows registering any festive event (🪔 Diwali, 🎄 Christmas, 🎆 New Year) in 3 simple steps:
+                    </p>
+
+                    <pre><code>import { registerEvent, start } from '@devcodehub99/event-overlay';
+
+// 1. Define custom EventModule
+export const DiwaliEvent = {
+    id: 'diwali',
+    name: 'Diwali Celebration',
+    init(ctx, width, height, options) { /* Setup diyas, sparklers, lanterns */ },
+    update(time, delta, width, height) { /* Physics update loop */ },
+    draw(ctx, width, height, time) { /* Render on high-DPI canvas */ },
+    destroy() { /* Cleanup resources */ }
+};
+
+// 2. Register module
+registerEvent(DiwaliEvent);
+
+// 3. Start anywhere
+start('diwali');</code></pre>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p><strong>@devcodehub99/event-overlay</strong> — High Performance Event Overlays for Modern Web & React. MIT Licensed.</p>
+        </footer>
+    </div>
+
+    <!-- Interactive Controller Script -->
+    <script type="module">
+        import EventOverlay from './dist/event-overlay.js';
+
+        let currentEngine = null;
+        let activeEvent = 'independence-day';
+
+        const configs = {
+            'independence-day': {
+                maxFlags: 3,
+                maxKites: 6,
+                maxJets: 2,
+                maxFireworks: 3,
+                maxPetals: 35,
+                opacity: 0.95,
+                showGlow: true,
+                showWave: true,
+                waveOpacity: 0.65
+            },
+            'holi': {
+                maxBalloons: 15,
+                maxPichkaaris: 4,
+                opacity: 0.95,
+                showAmbient: true
+            }
+        };
+
+        const presets = {
+            'independence-day': [
+                { name: '🎉 Grand Celebration', cfg: { maxFlags: 3, maxKites: 6, maxJets: 2, maxFireworks: 3, maxPetals: 35, opacity: 0.95, showWave: true, waveOpacity: 0.65 } },
+                { name: '🌊 Majestic Silk Wave', cfg: { maxFlags: 2, maxKites: 4, maxJets: 2, maxFireworks: 2, maxPetals: 25, opacity: 0.95, showWave: true, waveOpacity: 0.9 } },
+                { name: '✈️ Airshow Flyover', cfg: { maxFlags: 2, maxKites: 2, maxJets: 4, maxFireworks: 1, maxPetals: 15, opacity: 0.95, showWave: true, waveOpacity: 0.5 } },
+                { name: '🪁 Kite Carnival', cfg: { maxFlags: 4, maxKites: 15, maxJets: 0, maxFireworks: 1, maxPetals: 20, opacity: 0.95, showWave: true, waveOpacity: 0.4 } },
+                { name: '✨ Subtle Ambient', cfg: { maxFlags: 2, maxKites: 3, maxJets: 1, maxFireworks: 1, maxPetals: 15, opacity: 0.6, showWave: true, waveOpacity: 0.3 } }
+            ],
+            'holi': [
+                { name: '🎨 Vibrant Gulal', cfg: { maxBalloons: 15, maxPichkaaris: 4, opacity: 0.95, showAmbient: true } },
+                { name: '💥 Water Balloon Blast', cfg: { maxBalloons: 25, maxPichkaaris: 2, opacity: 0.95, showAmbient: true } },
+                { name: '🔫 Pichkaari Showdown', cfg: { maxBalloons: 6, maxPichkaaris: 6, opacity: 0.95, showAmbient: true } },
+                { name: '🌸 Gentle Festive Glow', cfg: { maxBalloons: 6, maxPichkaaris: 2, opacity: 0.6, showAmbient: true } }
+            ]
+        };
+
+        function startOverlay() {
+            if (currentEngine) {
+                currentEngine.stop();
+            }
+            const c = configs[activeEvent];
+            currentEngine = EventOverlay.create({
+                event: activeEvent,
+                opacity: c.opacity,
+                eventOptions: c
+            });
+            currentEngine.start();
+        }
+
+        // Interactive Click / Tap Burst
+        window.addEventListener('click', (e) => {
+            if (e.target.closest('.glass-card, .event-nav, header, button, input, .pill-badge')) return;
+
+            const mod = currentEngine?._activeModule;
+            if (mod && typeof mod.triggerBurst === 'function') {
+                mod.triggerBurst(e.clientX, e.clientY);
+            }
+        });
+
+        function renderUI() {
+            const container = document.getElementById('dynamicControls');
+            const heroTitle = document.getElementById('heroTitle');
+            const heroSubtitle = document.getElementById('heroSubtitle');
+            const presetsBar = document.getElementById('presetsBar');
+            const tableBody = document.getElementById('optionsTableBody');
+
+            // Render Presets
+            presetsBar.innerHTML = '';
+            presets[activeEvent].forEach((p, idx) => {
+                const chip = document.createElement('button');
+                chip.className = `preset-btn ${idx === 0 ? 'active' : ''}`;
+                chip.textContent = p.name;
+                chip.addEventListener('click', () => {
+                    document.querySelectorAll('.preset-btn').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    Object.assign(configs[activeEvent], p.cfg);
+                    renderUI();
+                    startOverlay();
+                });
+                presetsBar.appendChild(chip);
+            });
+
+            if (activeEvent === 'independence-day') {
+                heroTitle.textContent = 'Independence Day Overlay';
+                heroTitle.classList.remove('holi-theme');
+                heroSubtitle.textContent = 'Patriotic celebration featuring waving Indian flags (Tiranga), flowing tricolor silk waves, flying kites, airshow jets & fireworks.';
+
+                container.innerHTML = `
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">🌊 Tricolor Silk Wave Opacity</span>
+                            <span class="control-val-badge">${configs[activeEvent].waveOpacity}</span>
+                        </div>
+                        <input type="range" id="slWaveOpacity" min="0.0" max="1.0" step="0.05" value="${configs[activeEvent].waveOpacity}">
+                    </div>
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">🇮🇳 Indian Flags (Tiranga)</span>
+                            <span class="control-val-badge">${configs[activeEvent].maxFlags}</span>
+                        </div>
+                        <input type="range" id="slFlags" min="0" max="8" value="${configs[activeEvent].maxFlags}">
+                    </div>
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">🪁 Flying Kites</span>
+                            <span class="control-val-badge">${configs[activeEvent].maxKites}</span>
+                        </div>
+                        <input type="range" id="slKites" min="0" max="25" value="${configs[activeEvent].maxKites}">
+                    </div>
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">✈️ Airshow Jets</span>
+                            <span class="control-val-badge">${configs[activeEvent].maxJets}</span>
+                        </div>
+                        <input type="range" id="slJets" min="0" max="5" value="${configs[activeEvent].maxJets}">
+                    </div>
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">🎆 Fireworks</span>
+                            <span class="control-val-badge">${configs[activeEvent].maxFireworks}</span>
+                        </div>
+                        <input type="range" id="slFireworks" min="0" max="8" value="${configs[activeEvent].maxFireworks}">
+                    </div>
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">🌸 Drifting Petals</span>
+                            <span class="control-val-badge">${configs[activeEvent].maxPetals}</span>
+                        </div>
+                        <input type="range" id="slPetals" min="0" max="80" value="${configs[activeEvent].maxPetals}">
+                    </div>
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">✨ Overall Canvas Opacity</span>
+                            <span class="control-val-badge">${configs[activeEvent].opacity}</span>
+                        </div>
+                        <input type="range" id="slOpacity" min="0.1" max="1.0" step="0.05" value="${configs[activeEvent].opacity}">
+                    </div>
+                `;
+
+                document.getElementById('slWaveOpacity').addEventListener('input', (e) => { configs[activeEvent].waveOpacity = parseFloat(e.target.value); startOverlay(); renderUI(); });
+                document.getElementById('slFlags').addEventListener('input', (e) => { configs[activeEvent].maxFlags = parseInt(e.target.value, 10); startOverlay(); renderUI(); });
+                document.getElementById('slKites').addEventListener('input', (e) => { configs[activeEvent].maxKites = parseInt(e.target.value, 10); startOverlay(); renderUI(); });
+                document.getElementById('slJets').addEventListener('input', (e) => { configs[activeEvent].maxJets = parseInt(e.target.value, 10); startOverlay(); renderUI(); });
+                document.getElementById('slFireworks').addEventListener('input', (e) => { configs[activeEvent].maxFireworks = parseInt(e.target.value, 10); startOverlay(); renderUI(); });
+                document.getElementById('slPetals').addEventListener('input', (e) => { configs[activeEvent].maxPetals = parseInt(e.target.value, 10); startOverlay(); renderUI(); });
+                document.getElementById('slOpacity').addEventListener('input', (e) => { configs[activeEvent].opacity = parseFloat(e.target.value); startOverlay(); renderUI(); });
+
+                // Docs Table
+                tableBody.innerHTML = `
+                    <tr><td class="prop-name">waveOpacity</td><td><span class="type-pill">number</span></td><td><span class="val-default">0.65</span></td><td>Transparency/opacity of the flowing Indian Tricolor Silk Wave (0.0 to 1.0)</td></tr>
+                    <tr><td class="prop-name">showWave</td><td><span class="type-pill">boolean</span></td><td><span class="val-default">true</span></td><td>Enable or disable the flowing tricolor silk banner wave</td></tr>
+                    <tr><td class="prop-name">maxFlags</td><td><span class="type-pill">number</span></td><td><span class="val-default">3</span></td><td>Maximum simultaneous waving Indian National Flags (Tiranga)</td></tr>
+                    <tr><td class="prop-name">maxKites</td><td><span class="type-pill">number</span></td><td><span class="val-default">6</span></td><td>Maximum simultaneous flying tricolor kites with ribbons</td></tr>
+                    <tr><td class="prop-name">maxJets</td><td><span class="type-pill">number</span></td><td><span class="val-default">2</span></td><td>Fighter jets crossing with tricolor smoke vapor trails</td></tr>
+                    <tr><td class="prop-name">maxFireworks</td><td><span class="type-pill">number</span></td><td><span class="val-default">3</span></td><td>Bursting fireworks and gold sparkler clusters</td></tr>
+                    <tr><td class="prop-name">maxPetals</td><td><span class="type-pill">number</span></td><td><span class="val-default">35</span></td><td>Marigold and rose petals drifting with wind physics</td></tr>
+                    <tr><td class="prop-name">showGlow</td><td><span class="type-pill">boolean</span></td><td><span class="val-default">true</span></td><td>Ambient Saffron top glow and Green bottom glow</td></tr>
+                    <tr><td class="prop-name">opacity</td><td><span class="type-pill">number</span></td><td><span class="val-default">0.95</span></td><td>Overall canvas opacity from 0.0 to 1.0</td></tr>
+                    <tr><td class="prop-name">zIndex</td><td><span class="type-pill">number</span></td><td><span class="val-default">99999</span></td><td>CSS z-index applied to fixed canvas overlay</td></tr>
+                `;
+
+            } else if (activeEvent === 'holi') {
+                heroTitle.textContent = 'Holi Festival Overlay';
+                heroTitle.classList.add('holi-theme');
+                heroSubtitle.textContent = 'Vibrant celebration featuring bursting water balloons, sweeping pichkaari streams, splash physics & ambient color corners.';
+
+                container.innerHTML = `
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">🎈 Water Balloons</span>
+                            <span class="control-val-badge">${configs[activeEvent].maxBalloons}</span>
+                        </div>
+                        <input type="range" id="slBalloons" min="0" max="30" value="${configs[activeEvent].maxBalloons}">
+                    </div>
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">💦 Pichkaari Streams</span>
+                            <span class="control-val-badge">${configs[activeEvent].maxPichkaaris}</span>
+                        </div>
+                        <input type="range" id="slPichkaaris" min="0" max="8" value="${configs[activeEvent].maxPichkaaris}">
+                    </div>
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">✨ Overall Canvas Opacity</span>
+                            <span class="control-val-badge">${configs[activeEvent].opacity}</span>
+                        </div>
+                        <input type="range" id="slOpacity" min="0.1" max="1.0" step="0.05" value="${configs[activeEvent].opacity}">
+                    </div>
+                `;
+
+                document.getElementById('slBalloons').addEventListener('input', (e) => { configs[activeEvent].maxBalloons = parseInt(e.target.value, 10); startOverlay(); renderUI(); });
+                document.getElementById('slPichkaaris').addEventListener('input', (e) => { configs[activeEvent].maxPichkaaris = parseInt(e.target.value, 10); startOverlay(); renderUI(); });
+                document.getElementById('slOpacity').addEventListener('input', (e) => { configs[activeEvent].opacity = parseFloat(e.target.value); startOverlay(); renderUI(); });
+
+                // Docs Table
+                tableBody.innerHTML = `
+                    <tr><td class="prop-name">maxBalloons</td><td><span class="type-pill">number</span></td><td><span class="val-default">15</span></td><td>Maximum simultaneous water balloons launched from edges</td></tr>
+                    <tr><td class="prop-name">maxPichkaaris</td><td><span class="type-pill">number</span></td><td><span class="val-default">4</span></td><td>Water gun streams sweeping across the screen</td></tr>
+                    <tr><td class="prop-name">colors</td><td><span class="type-pill">ColorRGB[]</span></td><td><span class="val-default">9 colors</span></td><td>Custom RGB color palette for balloons, powder & splashes</td></tr>
+                    <tr><td class="prop-name">showAmbient</td><td><span class="type-pill">boolean</span></td><td><span class="val-default">true</span></td><td>Pulsating watercolor corner stains in all 4 corners</td></tr>
+                    <tr><td class="prop-name">opacity</td><td><span class="type-pill">number</span></td><td><span class="val-default">0.95</span></td><td>Overall canvas opacity from 0.0 to 1.0</td></tr>
+                    <tr><td class="prop-name">duration</td><td><span class="type-pill">number</span></td><td><span class="val-default">0</span></td><td>Auto-stop timer in ms (0 = runs continuously)</td></tr>
+                `;
+            }
+
+            updateCodeSnippets();
+        }
+
+        function updateCodeSnippets() {
+            const activeTab = document.querySelector('.tab-switch.active')?.dataset.lang || 'react';
+            const codeBox = document.getElementById('codeSnippet');
+
+            const isIndep = activeEvent === 'independence-day';
+            const componentName = isIndep ? 'IndependenceDayOverlay' : 'HoliOverlay';
+            const subpath = isIndep ? 'independence-day' : 'holi';
+
+            let snippet = '';
+            if (activeTab === 'react') {
+                snippet = `// 1. Install package:\n// npm install @devcodehub99/event-overlay\n\nimport { ${componentName} } from '@devcodehub99/event-overlay/react/${subpath}';\n\nexport default function App() {\n    return (\n        <main>\n            {/* Tree-shaken: loads ONLY ${isIndep ? 'Independence Day' : 'Holi'} code (~12KB) */}\n            <${componentName} opacity={0.95} />\n            <h1>Welcome to my website!</h1>\n        </main>\n    );\n}`;
+            } else if (activeTab === 'esm') {
+                snippet = `import { start, stop } from '@devcodehub99/event-overlay/${subpath}';\n\n// Start overlay with custom configuration\nconst overlay = start({\n    opacity: 0.95,\n    duration: 0 // 0 = infinite\n});\n\n// To stop or toggle later:\n// stop();\n// overlay.toggle();`;
+            } else if (activeTab === 'cdn') {
+                snippet = `<!-- Standalone drop-in CDN script tag (Paste before </body>) -->\n<script \n  src="https://cdn.jsdelivr.net/npm/@devcodehub99/event-overlay/dist/events/${subpath}.umd.js" \n  data-autostart>\n<\/script>`;
+            } else if (activeTab === 'tsx') {
+                snippet = `// Drop ${componentName}.tsx directly into your Next.js / React project:\nimport ${componentName} from '@/components/${componentName}';\n\nexport default function Page() {\n    return (\n        <div>\n            <${componentName} />\n            <h1>Festive Greetings!</h1>\n        </div>\n    );\n}`;
+            }
+
+            codeBox.textContent = snippet;
+        }
+
+        // Copy button
+        document.getElementById('btnCopy').addEventListener('click', () => {
+            const code = document.getElementById('codeSnippet').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.getElementById('btnCopy');
+                btn.textContent = '✓ Copied!';
+                setTimeout(() => btn.textContent = 'Copy Code', 2000);
+            });
+        });
+
+        // Event Switcher
+        document.querySelectorAll('.nav-btn').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.nav-btn').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                activeEvent = tab.dataset.event;
+                renderUI();
+                startOverlay();
+            });
+        });
+
+        // Code tab buttons
+        document.querySelectorAll('.tab-switch').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab-switch').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                updateCodeSnippets();
+            });
+        });
+
+        // Pause/Resume button
+        const btnToggle = document.getElementById('btnToggle');
+        btnToggle.addEventListener('click', () => {
+            if (currentEngine.isRunning()) {
+                currentEngine.stop();
+                btnToggle.textContent = 'Resume Overlay';
+                btnToggle.classList.replace('btn-brand', 'btn-outline');
+            } else {
+                currentEngine.start();
+                btnToggle.textContent = 'Pause Overlay';
+                btnToggle.classList.replace('btn-outline', 'btn-brand');
+            }
+        });
+
+        document.getElementById('btnRestart').addEventListener('click', () => {
+            startOverlay();
+            btnToggle.textContent = 'Pause Overlay';
+            btnToggle.classList.replace('btn-outline', 'btn-brand');
+        });
+
+        // Initial setup
+        renderUI();
+        startOverlay();
+    </script>
+</body>
+</html>
