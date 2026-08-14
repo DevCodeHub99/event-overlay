@@ -1242,7 +1242,7 @@ const IndependenceDayEvent = {
     }
 };
 
-default IndependenceDayEvent;
+
 
 
 registerEvent(IndependenceDayEvent);

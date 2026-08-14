@@ -899,7 +899,7 @@ const HoliEvent = {
     }
 };
 
-default HoliEvent;
+
 
 
 registerEvent(HoliEvent);

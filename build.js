@@ -30,12 +30,9 @@ fs.mkdirSync(path.join(DIST_DIR, 'events'), { recursive: true });
 
 // Read source files
 const utilsSource = fs.readFileSync(path.join(SRC_DIR, 'core', 'utils.js'), 'utf-8');
-const engineSource = fs.readFileSync(path.join(SRC_DIR, 'core', 'engine.js'), 'utf-8')
-    .replace(/import\s+\{[^}]+\}\s+from\s+['"][^'"]+['"];?/g, '');
-const holiSource = fs.readFileSync(path.join(SRC_DIR, 'events', 'holi.js'), 'utf-8')
-    .replace(/import\s+\{[^}]+\}\s+from\s+['"][^'"]+['"];?/g, '');
-const independenceSource = fs.readFileSync(path.join(SRC_DIR, 'events', 'independence-day.js'), 'utf-8')
-    .replace(/import\s+\{[^}]+\}\s+from\s+['"][^'"]+['"];?/g, '');
+const engineSource = fs.readFileSync(path.join(SRC_DIR, 'core', 'engine.js'), 'utf-8');
+const holiSource = fs.readFileSync(path.join(SRC_DIR, 'events', 'holi.js'), 'utf-8');
+const independenceSource = fs.readFileSync(path.join(SRC_DIR, 'events', 'independence-day.js'), 'utf-8');
 
 const tsxIndep = fs.existsSync(path.join(__dirname, 'IndependenceDayOverlay.tsx'))
     ? fs.readFileSync(path.join(__dirname, 'IndependenceDayOverlay.tsx'), 'utf-8')
@@ -48,6 +45,20 @@ const tsxHoli = fs.existsSync(path.join(__dirname, 'HoliOverlay.tsx'))
 const licenseText = fs.existsSync(path.join(__dirname, 'LICENSE'))
     ? fs.readFileSync(path.join(__dirname, 'LICENSE'), 'utf-8')
     : 'MIT License';
+
+// Helper to clean module syntax for internal inlining
+function stripInternalExports(code) {
+    return code
+        .replace(/import\s+[\s\S]*?from\s+['"][^'"]+['"];?/g, '')
+        .replace(/export\s+default\s+[\w$]+;?/g, '')
+        .replace(/export\s*\{[\s\S]*?\};?/g, '')
+        .replace(/export\s+(const|let|var|function|class)\s+/g, '$1 ');
+}
+
+const utilsClean = stripInternalExports(utilsSource);
+const engineClean = stripInternalExports(engineSource);
+const holiClean = stripInternalExports(holiSource);
+const indepClean = stripInternalExports(independenceSource);
 
 function minify(code) {
     return code
@@ -67,16 +78,16 @@ const esmUnified = `/**
  */
 
 // ─── UTILS ───
-${utilsSource.replace(/export\s+/g, '')}
+${utilsClean}
 
 // ─── CORE ENGINE ───
-${engineSource.replace(/export\s+/g, '')}
+${engineClean}
 
 // ─── HOLI EVENT ───
-${holiSource.replace(/export\s+/g, '')}
+${holiClean}
 
 // ─── INDEPENDENCE DAY EVENT ───
-${independenceSource.replace(/export\s+/g, '')}
+${indepClean}
 
 // Auto-register built-in events
 registerEvent(IndependenceDayEvent);
@@ -220,13 +231,13 @@ const esmIndep = `/**
  */
 
 // ─── UTILS ───
-${utilsSource.replace(/export\s+/g, '')}
+${utilsClean}
 
 // ─── CORE ENGINE ───
-${engineSource.replace(/export\s+/g, '')}
+${engineClean}
 
 // ─── INDEPENDENCE DAY EVENT ───
-${independenceSource.replace(/export\s+/g, '')}
+${indepClean}
 
 registerEvent(IndependenceDayEvent);
 
@@ -348,13 +359,13 @@ const esmHoli = `/**
  */
 
 // ─── UTILS ───
-${utilsSource.replace(/export\s+/g, '')}
+${utilsClean}
 
 // ─── CORE ENGINE ───
-${engineSource.replace(/export\s+/g, '')}
+${engineClean}
 
 // ─── HOLI EVENT ───
-${holiSource.replace(/export\s+/g, '')}
+${holiClean}
 
 registerEvent(HoliEvent);
 

@@ -884,7 +884,7 @@ const HoliEvent = {
     }
 };
 
-default HoliEvent;
+
 
 
 // ─── INDEPENDENCE DAY EVENT ───
@@ -1737,7 +1737,7 @@ const IndependenceDayEvent = {
     }
 };
 
-default IndependenceDayEvent;
+
 
 
 // Auto-register built-in events
