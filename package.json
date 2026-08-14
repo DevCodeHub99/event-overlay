@@ -1,0 +1,89 @@
+{
+    "name": "@devcodehub99/event-overlay",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "🎆 High-performance, plug-and-play celebration overlay engine for Independence Day, Holi, and custom festive events. Zero dependencies.",
+    "main": "dist/event-overlay.cjs",
+    "module": "dist/event-overlay.js",
+    "types": "dist/event-overlay.d.ts",
+    "browser": "dist/event-overlay.umd.js",
+    "exports": {
+        ".": {
+            "import": "./dist/event-overlay.js",
+            "require": "./dist/event-overlay.cjs",
+            "types": "./dist/event-overlay.d.ts",
+            "default": "./dist/event-overlay.js"
+        },
+        "./holi": {
+            "import": "./dist/events/holi.js",
+            "types": "./dist/event-overlay.d.ts"
+        },
+        "./independence-day": {
+            "import": "./dist/events/independence-day.js",
+            "types": "./dist/event-overlay.d.ts"
+        },
+        "./react": {
+            "import": "./src/react/index.jsx",
+            "types": "./dist/event-overlay.d.ts"
+        },
+        "./react/holi": {
+            "import": "./src/react/holi.jsx",
+            "types": "./dist/event-overlay.d.ts"
+        },
+        "./react/independence-day": {
+            "import": "./src/react/independence-day.jsx",
+            "types": "./dist/event-overlay.d.ts"
+        },
+        "./umd": "./dist/event-overlay.umd.js",
+        "./umd/holi": "./dist/events/holi.umd.js",
+        "./umd/independence-day": "./dist/events/independence-day.umd.js",
+        "./dist/*": "./dist/*",
+        "./src/*": "./src/*"
+    },
+    "sideEffects": false,
+    "files": [
+        "dist",
+        "src",
+        "IndependenceDayOverlay.tsx",
+        "HoliOverlay.tsx",
+        "README.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "build": "node build.js",
+        "dev": "npx -y http-server . -p 3000 -o /demo.html",
+        "prepublishOnly": "npm run build"
+    },
+    "keywords": [
+        "event-overlay",
+        "independence-day",
+        "holi",
+        "festival",
+        "animation",
+        "canvas",
+        "celebration",
+        "kites",
+        "airshow",
+        "fireworks",
+        "confetti",
+        "water-balloon",
+        "effects",
+        "widget",
+        "esm",
+        "tree-shaking"
+    ],
+    "author": "Vikas",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DevCodeHub99/event-overlay.git"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/"
+    },
+    "homepage": "https://github.com/DevCodeHub99/event-overlay#readme",
+    "bugs": {
+        "url": "https://github.com/DevCodeHub99/event-overlay/issues"
+    },
+    "devDependencies": {}
+}
