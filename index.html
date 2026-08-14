@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎆 Event Overlay — High Performance Multi-Event Celebration Framework</title>
-    <meta name="description" content="A lightweight, high-performance HTML5 Canvas celebration overlay framework with tree-shakeable subpaths for Independence Day, Holi, and custom festive events.">
+    <title>🎆 Event Overlay — High Performance Celebration Framework</title>
+    <meta name="description" content="A lightweight, high-performance HTML5 Canvas celebration overlay framework with dedicated packages for Independence Day, Holi, and custom festive celebrations.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-base: #06080F;
-            --card-bg: rgba(13, 18, 36, 0.72);
+            --card-bg: rgba(13, 18, 36, 0.75);
             --card-border: rgba(255, 255, 255, 0.09);
-            --card-border-hover: rgba(255, 255, 255, 0.18);
+            --card-border-hover: rgba(255, 255, 255, 0.2);
             --text-primary: #F8FAFC;
             --text-secondary: #94A3B8;
             --text-muted: #64748B;
@@ -44,7 +44,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Ambient background glow */
         .ambient-mesh {
             position: fixed;
             inset: 0;
@@ -61,7 +60,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(6, 8, 15, 0.75);
+            background: rgba(6, 8, 15, 0.85);
             backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             padding: 12px 24px;
@@ -80,7 +79,7 @@
             align-items: center;
             gap: 10px;
             font-weight: 800;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             color: #FFFFFF;
             letter-spacing: -0.01em;
         }
@@ -105,7 +104,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 7px 16px;
+            padding: 8px 18px;
             border-radius: 10px;
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -148,7 +147,7 @@
         /* Hero Header */
         header {
             text-align: center;
-            margin-bottom: 44px;
+            margin-bottom: 40px;
         }
 
         .pill-badge {
@@ -163,7 +162,7 @@
             font-size: 0.85rem;
             font-weight: 600;
             letter-spacing: 0.3px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             backdrop-filter: blur(12px);
         }
 
@@ -182,7 +181,7 @@
         }
 
         h1 {
-            font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+            font-size: clamp(2.2rem, 4.5vw, 3.6rem);
             font-weight: 900;
             line-height: 1.15;
             margin-bottom: 14px;
@@ -200,10 +199,10 @@
         }
 
         p.hero-desc {
-            font-size: 1.15rem;
+            font-size: 1.12rem;
             color: var(--text-secondary);
-            max-width: 720px;
-            margin: 0 auto 32px;
+            max-width: 740px;
+            margin: 0 auto 30px;
             line-height: 1.6;
         }
 
@@ -216,7 +215,7 @@
 
         .event-nav {
             display: inline-flex;
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 23, 42, 0.85);
             border: 1px solid var(--card-border);
             border-radius: 16px;
             padding: 5px;
@@ -691,7 +690,7 @@
                 <a href="https://github.com/DevCodeHub99/event-overlay" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none; margin-left: 6px; font-weight: 700; color: #38BDF8;">GitHub ↗</a>
             </div>
             <h1 id="heroTitle">Independence Day Overlay</h1>
-            <p class="hero-desc" id="heroSubtitle">A lightweight, high-performance canvas celebration framework with tree-shakeable event subpaths for Independence Day, Holi, and custom festive celebrations.</p>
+            <p class="hero-desc" id="heroSubtitle">A lightweight, high-performance canvas celebration framework with dedicated packages for Independence Day, Holi, and custom festive celebrations.</p>
 
             <!-- Event Switcher -->
             <div class="event-nav-wrap">
@@ -734,7 +733,7 @@
                 <!-- Integration Hub -->
                 <div class="glass-card">
                     <div class="card-header-bar">
-                        <h2 class="card-heading">📦 Tree-Shakeable Integration</h2>
+                        <h2 class="card-heading">📦 Dedicated Package Integration</h2>
                     </div>
 
                     <div class="code-deck">
@@ -788,7 +787,7 @@
                         The kernel architecture allows registering any festive event (🪔 Diwali, 🎄 Christmas, 🎆 New Year) in 3 simple steps:
                     </p>
 
-                    <pre><code>import { registerEvent, start } from '@devcodehub99/event-overlay';
+                    <pre><code>import { registerEvent, start } from '@event-overlay/core';
 
 // 1. Define custom EventModule
 export const DiwaliEvent = {
@@ -811,7 +810,7 @@ start('diwali');</code></pre>
 
         <!-- Footer -->
         <footer>
-            <p><strong>@devcodehub99/event-overlay</strong> — High Performance Event Overlays for Modern Web & React. MIT Licensed.</p>
+            <p><strong>@event-overlay</strong> — High Performance Event Overlays for Modern Web & React. MIT Licensed.</p>
         </footer>
     </div>
 
@@ -873,7 +872,7 @@ start('diwali');</code></pre>
 
         // Interactive Click / Tap Burst
         window.addEventListener('click', (e) => {
-            if (e.target.closest('.glass-card, .event-nav, header, button, input, .pill-badge')) return;
+            if (e.target.closest('.glass-card, .event-nav, header, button, input, .pill-badge, .top-nav-bar')) return;
 
             const mod = currentEngine?._activeModule;
             if (mod && typeof mod.triggerBurst === 'function') {
@@ -1035,16 +1034,16 @@ start('diwali');</code></pre>
             const codeBox = document.getElementById('codeSnippet');
 
             const isIndep = activeEvent === 'independence-day';
+            const pkgName = isIndep ? '@event-overlay/independence-day' : '@event-overlay/holi';
             const componentName = isIndep ? 'IndependenceDayOverlay' : 'HoliOverlay';
-            const subpath = isIndep ? 'independence-day' : 'holi';
 
             let snippet = '';
             if (activeTab === 'react') {
-                snippet = `// 1. Install package:\n// npm install @devcodehub99/event-overlay\n\nimport { ${componentName} } from '@devcodehub99/event-overlay/react/${subpath}';\n\nexport default function App() {\n    return (\n        <main>\n            {/* Tree-shaken: loads ONLY ${isIndep ? 'Independence Day' : 'Holi'} code (~12KB) */}\n            <${componentName} opacity={0.95} />\n            <h1>Welcome to my website!</h1>\n        </main>\n    );\n}`;
+                snippet = `// 1. Install dedicated package:\n// npm install ${pkgName}\n\nimport { ${componentName} } from '${pkgName}/react';\n\nexport default function App() {\n    return (\n        <main>\n            {/* Only ~12KB bundle size */}\n            <${componentName} ${isIndep ? 'waveOpacity={0.65} maxFlags={3} maxKites={6}' : 'maxBalloons={15}'} />\n            <h1>Welcome to my website!</h1>\n        </main>\n    );\n}`;
             } else if (activeTab === 'esm') {
-                snippet = `import { start, stop } from '@devcodehub99/event-overlay/${subpath}';\n\n// Start overlay with custom configuration\nconst overlay = start({\n    opacity: 0.95,\n    duration: 0 // 0 = infinite\n});\n\n// To stop or toggle later:\n// stop();\n// overlay.toggle();`;
+                snippet = `import { start, stop } from '${pkgName}';\n\n// Start celebration overlay\nconst overlay = start({\n    opacity: 0.95,\n    ${isIndep ? 'waveOpacity: 0.65,\n    maxFlags: 3,\n    maxKites: 6' : 'maxBalloons: 15,\n    maxPichkaaris: 4'}\n});\n\n// To stop or toggle:\n// stop();\n// overlay.toggle();`;
             } else if (activeTab === 'cdn') {
-                snippet = `<!-- Standalone drop-in CDN script tag (Paste before </body>) -->\n<script \n  src="https://cdn.jsdelivr.net/npm/@devcodehub99/event-overlay/dist/events/${subpath}.umd.js" \n  data-autostart>\n<\/script>`;
+                snippet = `<!-- Standalone drop-in CDN script tag (Paste before </body>) -->\n<script \n  src="https://cdn.jsdelivr.net/npm/${pkgName}/dist/index.umd.js" \n  data-autostart>\n<\/script>`;
             } else if (activeTab === 'tsx') {
                 snippet = `// Drop ${componentName}.tsx directly into your Next.js / React project:\nimport ${componentName} from '@/components/${componentName}';\n\nexport default function Page() {\n    return (\n        <div>\n            <${componentName} />\n            <h1>Festive Greetings!</h1>\n        </div>\n    );\n}`;
             }
