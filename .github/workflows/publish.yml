@@ -1,35 +1,35 @@
-name: Automated NPM Publish
+name: Publish to NPM
 
 on:
   release:
     types: [published]
-  push:
-    tags:
-      - 'v*'
   workflow_dispatch:
 
 permissions:
   contents: read
-  id-token: write
+  id-token: write # Required for generating NPM provenance (SLSA security standard)
 
 jobs:
   publish-npm:
-    name: Publish Packages via Tokenless OIDC
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: 22.x # Use Node 22+ which includes npm CLI with native OIDC support
+          registry-url: 'https://registry.npmjs.org'
 
-      - name: Build Monorepo & Distributions
-        run: node build.js
+      - name: Update npm to latest
+        run: npm install -g npm@latest
 
-      - name: Publish All Monorepo Workspaces to NPM
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Packages
+        run: npm run build
+
+      - name: Publish to NPM
         run: npm publish --workspaces --access public --provenance
