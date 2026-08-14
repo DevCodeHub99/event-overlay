@@ -2,10 +2,10 @@
   <span style="font-size: 64px;">🎆</span>
 </p>
 
-<h1 align="center">Event Overlay</h1>
+<h1 align="center">@event-overlay</h1>
 
 <p align="center">
-  <strong>A high-performance, plug-and-play celebration overlay engine for any website or framework.</strong>
+  <strong>A high-performance, plug-and-play celebration overlay framework with dedicated packages for any website or framework.</strong>
 </p>
 
 <p align="center">
@@ -18,127 +18,95 @@
 
 ---
 
-## 🌟 Overview
+## 📦 Dedicated NPM Packages
 
-`@devcodehub99/event-overlay` is a lightweight, zero-dependency HTML5 Canvas engine designed for dynamic festive celebrations. It features a plug-and-play modular architecture with full tree-shaking support where individual events can be imported independently without bundling unused code.
-
-Supported out-of-the-box:
-- 🇮🇳 **Independence Day Overlay** (Flowing Tricolor Silk Wave, Waving Indian Flags with 24-spoke Ashoka Chakra, Flying Kites, Airshow Jets, Fireworks, and Marigold Petals)
-- 🎨 **Holi Festival Overlay** (Bursting Water Balloons, Sweeping Pichkaari Streams, Particle Splash Blooms, and Ambient Color Corners)
-- 🔌 **Extensible Kernel** for custom celebrations (Diwali, Christmas, New Year, etc.)
+| Package | Install Command | Description |
+| :--- | :--- | :--- |
+| **🇮🇳 Independence Day** | `npm install @event-overlay/independence-day` | Standalone Indian Independence Day celebration overlay (~12KB). |
+| **🎨 Holi Festival** | `npm install @event-overlay/holi` | Standalone Holi festival water balloon & pichkaari overlay. |
+| **🎆 Core Engine** | `npm install @event-overlay/core` | Unified multi-event celebration engine with subpaths. |
 
 ---
 
-## 📦 Installation
+## 🚀 Quick Usage
 
+### 1. 🇮🇳 Independence Day Overlay (`@event-overlay/independence-day`)
+
+#### React / Next.js:
 ```bash
-# npm
-npm install @devcodehub99/event-overlay
-
-# yarn
-yarn add @devcodehub99/event-overlay
-
-# pnpm
-pnpm add @devcodehub99/event-overlay
+npm install @event-overlay/independence-day
 ```
-
----
-
-## 🚀 Tree-Shakeable Usage
-
-### 1. React / Next.js (Tree-Shakeable Subpaths)
-
-#### 🇮🇳 Independence Day:
 ```jsx
-import { IndependenceDayOverlay } from '@devcodehub99/event-overlay/react/independence-day';
+import { IndependenceDayOverlay } from '@event-overlay/independence-day/react';
 
 export default function App() {
-    return (
-        <main>
-            {/* Loads ONLY Independence Day (~12KB) */}
-            <IndependenceDayOverlay 
-                opacity={0.95} 
-                waveOpacity={0.65}
-                maxFlags={3} 
-                maxKites={6} 
-            />
-            <h1>Happy Independence Day! 🇮🇳</h1>
-        </main>
-    );
+  return (
+    <main>
+      <IndependenceDayOverlay waveOpacity={0.65} maxFlags={3} maxKites={6} />
+      <h1>Happy Independence Day! 🇮🇳</h1>
+    </main>
+  );
 }
 ```
 
-#### 🎨 Holi Festival:
-```jsx
-import { HoliOverlay } from '@devcodehub99/event-overlay/react/holi';
-
-export default function App() {
-    return (
-        <main>
-            <HoliOverlay maxBalloons={15} maxPichkaaris={4} opacity={0.95} />
-            <h1>Happy Holi! 🎨</h1>
-        </main>
-    );
-}
-```
-
----
-
-### 2. Vanilla JavaScript (ES Module)
-
+#### Vanilla JavaScript / HTML:
 ```javascript
-import { start, stop } from '@devcodehub99/event-overlay/independence-day';
+import { start, stop } from '@event-overlay/independence-day';
 
-// Start Independence Day overlay
-const overlay = start({
-    opacity: 0.95,
-    eventOptions: {
-        waveOpacity: 0.65,
-        maxFlags: 3,
-        maxKites: 6,
-        maxJets: 2
-    }
+start({
+  waveOpacity: 0.65,
+  maxFlags: 3,
+  maxKites: 6
 });
-
-// Controls
-// overlay.stop();
-// overlay.toggle();
 ```
 
 ---
 
-### 3. Standalone Next.js TypeScript Components
+### 2. 🎨 Holi Festival Overlay (`@event-overlay/holi`)
 
-Copy `IndependenceDayOverlay.tsx` or `HoliOverlay.tsx` directly into your Next.js project:
+#### React / Next.js:
+```bash
+npm install @event-overlay/holi
+```
+```jsx
+import { HoliOverlay } from '@event-overlay/holi/react';
 
-```tsx
-import IndependenceDayOverlay from '@/components/IndependenceDayOverlay';
-
-export default function Page() {
-    return (
-        <main>
-            <IndependenceDayOverlay showWave={true} waveOpacity={0.65} />
-        </main>
-    );
+export default function App() {
+  return (
+    <main>
+      <HoliOverlay maxBalloons={15} maxPichkaaris={4} opacity={0.95} />
+      <h1>Happy Holi! 🎨</h1>
+    </main>
+  );
 }
 ```
 
+#### Vanilla JavaScript / HTML:
+```javascript
+import { start, stop } from '@event-overlay/holi';
+
+start({
+  maxBalloons: 15,
+  maxPichkaaris: 4
+});
+```
+
 ---
 
-### 4. CDN Drop-in Script Tag
+### 3. 🌐 HTML CDN Drop-in Tags
 
-Add a single script tag before `</body>`:
+Add directly before `</body>`:
 
 ```html
-<!-- Standalone Independence Day -->
+<!-- Independence Day -->
 <script 
-  src="https://cdn.jsdelivr.net/npm/@devcodehub99/event-overlay/dist/events/independence-day.umd.js" 
+  src="https://cdn.jsdelivr.net/npm/@event-overlay/independence-day/dist/index.umd.js" 
   data-autostart>
 </script>
 
-<!-- Standalone Holi -->
+<!-- Holi Festival -->
 <script 
-  src="https://cdn.jsdelivr.net/npm/@devcodehub99/event-overlay/dist/events/holi.umd.js" 
+  src="https://cdn.jsdelivr.net/npm/@event-overlay/holi/dist/index.umd.js" 
   data-autostart>
 </script>
 ```
@@ -147,7 +115,7 @@ Add a single script tag before `</body>`:
 
 ## ⚙️ Configuration & Props Reference
 
-### Independence Day Options (`IndependenceDayOptions`)
+### Independence Day Options
 
 | Property | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
@@ -162,7 +130,7 @@ Add a single script tag before `</body>`:
 | `opacity` | `number` | `0.95` | Overall canvas opacity (`0.0` to `1.0`) |
 | `zIndex` | `number` | `99999` | CSS z-index applied to the canvas overlay |
 
-### Holi Options (`HoliOptions`)
+### Holi Festival Options
 
 | Property | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
@@ -172,32 +140,6 @@ Add a single script tag before `</body>`:
 | `showAmbient` | `boolean` | `true` | Pulsating watercolor corner stains in all 4 corners |
 | `opacity` | `number` | `0.95` | Overall canvas opacity (`0.0` to `1.0`) |
 | `duration` | `number` | `0` | Auto-stop timer in ms (`0` = runs continuously) |
-
----
-
-## 🔌 Custom Event Architecture
-
-You can plug in custom event themes with 3 simple steps:
-
-```javascript
-import { registerEvent, start } from '@devcodehub99/event-overlay';
-
-// 1. Define custom EventModule
-export const DiwaliEvent = {
-    id: 'diwali',
-    name: 'Diwali Celebration',
-    init(ctx, width, height, options) { /* Setup diyas, sparklers */ },
-    update(time, delta, width, height) { /* Physics update loop */ },
-    draw(ctx, width, height, time) { /* High-DPI canvas render */ },
-    destroy() { /* Cleanup resources */ }
-};
-
-// 2. Register module
-registerEvent(DiwaliEvent);
-
-// 3. Start anywhere
-start('diwali');
-```
 
 ---
 

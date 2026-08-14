@@ -1,7 +1,9 @@
 /**
- * 🇮🇳 Independence Day Standalone Overlay v1.0.0
+ * 🇮🇳 @event-overlay/independence-day v1.0.0
  * @license MIT
  */
+
+// ─── UTILS ───
 /**
  * 🛠️ Shared Core Utilities for Event Overlay
  * Zero external dependencies.
@@ -52,6 +54,8 @@ function prefersReducedMotion() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+
+// ─── CORE ENGINE ───
 /**
  * 🎆 Event Overlay Engine — Core Kernel (Optimized)
  * Framework-agnostic, zero-dependency HTML5 Canvas engine for plug-and-play event animations.
@@ -387,6 +391,8 @@ class EventOverlayEngine {
     }
 }
 
+
+// ─── INDEPENDENCE DAY EVENT ───
 /**
  * 🇮🇳 Independence Day Event Module for Event Overlay
  * Features:
@@ -1241,28 +1247,27 @@ default IndependenceDayEvent;
 
 registerEvent(IndependenceDayEvent);
 
-let _instance = null;
+let _activeInstance = null;
 
 export function start(options = {}) {
-    if (_instance) _instance.stop();
-    _instance = new EventOverlayEngine({
-        ...options,
-        event: 'independence-day',
-        eventOptions: options
-    });
-    _instance.start();
-    return _instance;
+    if (_activeInstance) {
+        _activeInstance.stop();
+    }
+    const opts = Object.assign({}, options, { event: 'independence-day', eventOptions: options });
+    _activeInstance = new EventOverlayEngine(opts);
+    _activeInstance.start();
+    return _activeInstance;
 }
 
 export function stop() {
-    if (_instance) {
-        _instance.stop();
-        _instance = null;
+    if (_activeInstance) {
+        _activeInstance.stop();
+        _activeInstance = null;
     }
 }
 
 export function toggle(options = {}) {
-    if (_instance && _instance.isRunning()) {
+    if (_activeInstance && _activeInstance.isRunning()) {
         stop();
     } else {
         start(options);
@@ -1270,26 +1275,22 @@ export function toggle(options = {}) {
 }
 
 export function isRunning() {
-    return _instance ? _instance.isRunning() : false;
+    return _activeInstance ? _activeInstance.isRunning() : false;
 }
 
-export function create(options = {}) {
-    return new EventOverlayEngine({
-        ...options,
-        event: 'independence-day',
-        eventOptions: options
-    });
-}
-
-export { IndependenceDayEvent };
+export {
+    IndependenceDayEvent,
+    EventOverlayEngine
+};
 
 const IndependenceDayOverlay = {
+    version: '1.0.0',
     start,
     stop,
     toggle,
     isRunning,
-    create,
-    IndependenceDayEvent
+    IndependenceDayEvent,
+    EventOverlayEngine
 };
 
 export default IndependenceDayOverlay;

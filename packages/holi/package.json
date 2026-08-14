@@ -1,0 +1,43 @@
+{
+  "name": "@event-overlay/holi",
+  "version": "1.0.0",
+  "description": "🎨 Vibrant, high-performance Holi festival celebration overlay. Zero dependencies.",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "browser": "dist/index.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./react": {
+      "import": "./HoliOverlay.tsx",
+      "types": "./dist/index.d.ts"
+    },
+    "./umd": "./dist/index.umd.js"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "holi",
+    "colors",
+    "water-balloon",
+    "pichkaari",
+    "gulal",
+    "overlay",
+    "react",
+    "canvas"
+  ],
+  "author": "Vikas",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DevCodeHub99/event-overlay.git",
+    "directory": "packages/holi"
+  }
+}

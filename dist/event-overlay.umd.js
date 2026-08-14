@@ -1,5 +1,5 @@
 /**
- * 🎆 Event Overlay v1.0.0 — Unified UMD Build
+ * 🎆 @event-overlay/core v1.0.0 — Unified UMD Build
  * @license MIT
  */
 (function (root, factory) {
@@ -14,7 +14,7 @@
     'use strict';
 
 /**
- * 🎆 Event Overlay v1.0.0 — Unified Bundle
+ * 🎆 @event-overlay/core v1.0.0 — Unified Bundle
  * @license MIT
  */
 

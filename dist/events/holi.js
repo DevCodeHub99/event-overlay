@@ -1,7 +1,9 @@
 /**
- * 🎨 Holi Festival Standalone Overlay v1.0.0
+ * 🎨 @event-overlay/holi v1.0.0
  * @license MIT
  */
+
+// ─── UTILS ───
 /**
  * 🛠️ Shared Core Utilities for Event Overlay
  * Zero external dependencies.
@@ -52,6 +54,8 @@ function prefersReducedMotion() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+
+// ─── CORE ENGINE ───
 /**
  * 🎆 Event Overlay Engine — Core Kernel (Optimized)
  * Framework-agnostic, zero-dependency HTML5 Canvas engine for plug-and-play event animations.
@@ -387,6 +391,8 @@ class EventOverlayEngine {
     }
 }
 
+
+// ─── HOLI EVENT ───
 /**
  * 🎨 Holi Festival Event Module for Event Overlay
  * Features:
@@ -883,28 +889,27 @@ default HoliEvent;
 
 registerEvent(HoliEvent);
 
-let _instance = null;
+let _activeInstance = null;
 
 export function start(options = {}) {
-    if (_instance) _instance.stop();
-    _instance = new EventOverlayEngine({
-        ...options,
-        event: 'holi',
-        eventOptions: options
-    });
-    _instance.start();
-    return _instance;
+    if (_activeInstance) {
+        _activeInstance.stop();
+    }
+    const opts = Object.assign({}, options, { event: 'holi', eventOptions: options });
+    _activeInstance = new EventOverlayEngine(opts);
+    _activeInstance.start();
+    return _activeInstance;
 }
 
 export function stop() {
-    if (_instance) {
-        _instance.stop();
-        _instance = null;
+    if (_activeInstance) {
+        _activeInstance.stop();
+        _activeInstance = null;
     }
 }
 
 export function toggle(options = {}) {
-    if (_instance && _instance.isRunning()) {
+    if (_activeInstance && _activeInstance.isRunning()) {
         stop();
     } else {
         start(options);
@@ -912,27 +917,24 @@ export function toggle(options = {}) {
 }
 
 export function isRunning() {
-    return _instance ? _instance.isRunning() : false;
+    return _activeInstance ? _activeInstance.isRunning() : false;
 }
 
-export function create(options = {}) {
-    return new EventOverlayEngine({
-        ...options,
-        event: 'holi',
-        eventOptions: options
-    });
-}
-
-export { HoliEvent, HOLI_COLORS };
+export {
+    HoliEvent,
+    HOLI_COLORS,
+    EventOverlayEngine
+};
 
 const HoliOverlay = {
+    version: '1.0.0',
     start,
     stop,
     toggle,
     isRunning,
-    create,
     HoliEvent,
-    HOLI_COLORS
+    HOLI_COLORS,
+    EventOverlayEngine
 };
 
 export default HoliOverlay;

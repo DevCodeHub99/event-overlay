@@ -1,0 +1,48 @@
+{
+  "name": "@event-overlay/core",
+  "version": "1.0.0",
+  "description": "🎆 High-performance celebration overlay engine with tree-shakeable event subpaths. Zero dependencies.",
+  "main": "dist/event-overlay.cjs",
+  "module": "dist/event-overlay.js",
+  "types": "dist/event-overlay.d.ts",
+  "browser": "dist/event-overlay.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/event-overlay.js",
+      "require": "./dist/event-overlay.cjs",
+      "types": "./dist/event-overlay.d.ts",
+      "default": "./dist/event-overlay.js"
+    },
+    "./independence-day": {
+      "import": "./dist/events/independence-day.js",
+      "types": "./dist/events/independence-day.d.ts"
+    },
+    "./holi": {
+      "import": "./dist/events/holi.js",
+      "types": "./dist/events/holi.d.ts"
+    },
+    "./umd": "./dist/event-overlay.umd.js",
+    "./umd/independence-day": "./dist/events/independence-day.umd.js",
+    "./umd/holi": "./dist/events/holi.umd.js"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "event-overlay",
+    "independence-day",
+    "holi",
+    "celebration",
+    "canvas",
+    "react",
+    "monorepo"
+  ],
+  "author": "Vikas",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DevCodeHub99/event-overlay.git",
+    "directory": "packages/core"
+  }
+}

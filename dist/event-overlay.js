@@ -1,5 +1,5 @@
 /**
- * 🎆 Event Overlay v1.0.0 — Unified Bundle
+ * 🎆 @event-overlay/core v1.0.0 — Unified Bundle
  * @license MIT
  */
 
