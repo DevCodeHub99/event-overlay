@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   publish-npm:
-    name: Publish Packages via OIDC Trusted Publisher
+    name: Publish Packages to NPM
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -24,15 +24,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Build Monorepo & Distributions
         run: node build.js
 
       - name: Publish @event-overlay/independence-day
         run: npm publish ./packages/independence-day --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish @event-overlay/holi
         run: npm publish ./packages/holi --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish @event-overlay/core
         run: npm publish ./packages/core --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
