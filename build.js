@@ -573,7 +573,33 @@ const pkgIndepJson = {
     publishConfig: {
         access: "public"
     },
-    keywords: ["independence-day", "tiranga", "indian-flag", "kites", "airshow", "fireworks", "overlay", "react", "canvas"],
+    keywords: [
+        "independence-day",
+        "indian-independence-day",
+        "15-august",
+        "republic-day",
+        "26-january",
+        "tiranga",
+        "indian-flag",
+        "tricolor",
+        "kites",
+        "patriotism",
+        "airshow",
+        "fighter-jets",
+        "fireworks",
+        "azadi-ka-amrit-mahotsav",
+        "react-independence-day",
+        "celebration-overlay",
+        "canvas-animation",
+        "react-festive",
+        "nextjs-overlay",
+        "web-animation",
+        "canvas-overlay",
+        "overlay",
+        "react",
+        "canvas",
+        "zero-dependency"
+    ],
     author: "Vikas",
     license: "MIT",
     repository: {
@@ -584,45 +610,241 @@ const pkgIndepJson = {
 };
 fs.writeFileSync(path.join(pkgIndepDir, 'package.json'), JSON.stringify(pkgIndepJson, null, 2), 'utf-8');
 
-fs.writeFileSync(path.join(pkgIndepDir, 'README.md'), `# @event-overlay/independence-day 🇮🇳
+const indepReadmeContent = `<p align="center">
+  <span style="font-size: 72px;">🇮🇳</span>
+</p>
 
-> High-performance, zero-dependency Indian Independence Day celebration overlay.
+<h1 align="center">@event-overlay/independence-day</h1>
+
+<p align="center">
+  <strong>Patriotic, high-performance Indian Independence Day & Republic Day celebration overlay for React, Next.js, Vue, and Vanilla JS.</strong>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@event-overlay/independence-day"><img src="https://img.shields.io/npm/v/@event-overlay/independence-day.svg?style=flat-square&color=ff9933" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/@event-overlay/independence-day"><img src="https://img.shields.io/npm/dm/@event-overlay/independence-day.svg?style=flat-square&color=138808" alt="npm downloads" /></a>
+  <img src="https://img.shields.io/badge/bundle%20size-~12KB%20gzipped-00bfff?style=flat-square" alt="Bundle Size" />
+  <img src="https://img.shields.io/badge/dependencies-0-brightgreen?style=flat-square" alt="Zero Dependencies" />
+  <img src="https://img.shields.io/badge/framework-agnostic-9400d3?style=flat-square" alt="Framework Agnostic" />
+  <img src="https://img.shields.io/badge/typescript-ready-3178c6?style=flat-square" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/license-MIT-ffdf00?style=flat-square" alt="MIT License" />
+</p>
+
+---
+
+## 🇮🇳 Overview
+
+Celebrate **Indian Independence Day (15th August)** and **Republic Day (26th January)** in style! \`@event-overlay/independence-day\` is a turnkey, zero-dependency celebration canvas overlay for modern web applications.
+
+It renders an authentic, breathtaking patriotic atmosphere featuring the **Tricolor Silk Wave**, fluttering **Tiranga flags**, **high-altitude kites**, **IAF fighter jet airshows with tricolor smoke trails**, **grand fireworks**, and **drifting marigold petals** at buttery-smooth 60 FPS.
+
+---
+
+## ✨ Festive Elements & Features
+
+- 🌊 **Tricolor Silk Banner Wave**: Soft, billowing saffron-white-green satin ribbons flowing gracefully across the screen.
+- 🚩 **Waving Indian Flags (Tiranga)**: Realistic cloth simulation of the Indian National Flag with Ashoka Chakra details.
+- 🪁 **High-Altitude Flying Kites**: Colorful kites soaring with swaying physics-based tails and ribbons.
+- ✈️ **Fighter Jet Airshow**: High-speed aircraft formations streaking across the sky, painting persistent saffron, white, and green smoke vapor trails.
+- 🎆 **Grand Fireworks & Sparklers**: Dazzling bursts of gold, saffron, and emerald sparkler clusters.
+- 🌸 **Drifting Petals**: Natural marigold (*Genda*) and rose flower petals floating in gentle wind vectors.
+- 🌅 **Ambient National Glow**: Top saffron and bottom green atmospheric glows.
+- ⚡ **Lightweight & High Performance**: 60 FPS hardware-accelerated Canvas 2D engine with zero external dependencies (~12KB gzipped).
+- 🛡️ **Non-Intrusive & Accessible**: Configured with \`pointer-events: none\` and \`aria-hidden="true"\` so your website remains 100% interactive.
+- 🧩 **Universal Framework Support**: Ready for **React**, **Next.js (App & Pages Router)**, **Vue**, **Svelte**, **Angular**, **Vite**, and **HTML CDN script tags**.
+
+---
 
 ## 📦 Installation
+
 \`\`\`bash
+# npm
 npm install @event-overlay/independence-day
+
+# yarn
+yarn add @event-overlay/independence-day
+
+# pnpm
+pnpm add @event-overlay/independence-day
+
+# bun
+bun add @event-overlay/independence-day
 \`\`\`
 
-## 🚀 Usage
+---
 
-### React / Next.js
-\`\`\`jsx
+## 🚀 Quick Start Guide
+
+### 1. React & Next.js (App Router / Pages Router)
+
+Import \`IndependenceDayOverlay\` and place it in your root layout or page:
+
+\`\`\`tsx
 import { IndependenceDayOverlay } from '@event-overlay/independence-day/react';
 
 export default function App() {
   return (
     <main>
-      <IndependenceDayOverlay waveOpacity={0.65} maxFlags={3} maxKites={6} />
-      <h1>Happy Independence Day! 🇮🇳</h1>
+      {/* Patriotic celebration overlay */}
+      <IndependenceDayOverlay 
+        waveOpacity={0.65} 
+        maxFlags={3} 
+        maxKites={6} 
+        maxJets={2} 
+        maxFireworks={3} 
+        maxPetals={35} 
+      />
+
+      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '4rem' }}>
+        <h1>🇮🇳 Happy Independence Day! Jai Hind! 🇮🇳</h1>
+        <p>Your interactive site content remains fully clickable.</p>
+      </div>
     </main>
   );
 }
 \`\`\`
 
-### Vanilla JavaScript
-\`\`\`javascript
-import { start, stop } from '@event-overlay/independence-day';
+> **Next.js App Router Note**: \`IndependenceDayOverlay\` contains \`'use client'\` internally, ensuring seamless compatibility with Next.js 13/14/15 Server & Client components.
 
-start({
+---
+
+### 2. Vanilla JavaScript / TypeScript (Vite, Webpack, ES Modules)
+
+\`\`\`javascript
+import { start, stop, toggle, isRunning } from '@event-overlay/independence-day';
+
+// Launch overlay with custom particle densities
+const overlay = start({
   waveOpacity: 0.65,
   maxFlags: 3,
-  maxKites: 6
+  maxKites: 6,
+  maxJets: 2,
+  maxFireworks: 3,
+  maxPetals: 35
 });
+
+// Programmatic controls:
+// stop();        // Disables overlay and cleans up resources
+// toggle();      // Toggles active state
+// isRunning();   // Returns true if animation is currently active
 \`\`\`
 
+---
+
+### 3. HTML CDN Drop-in Script Tag (No Build Tools Required)
+
+Add directly before your closing \`</body>\` tag. Add \`data-autostart\` to launch immediately:
+
+\`\`\`html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Independence Day</title>
+</head>
+<body>
+  <h1>Celebration Sale is Live! 🇮🇳</h1>
+
+  <!-- 1-line CDN Drop-in -->
+  <script 
+    src="https://cdn.jsdelivr.net/npm/@event-overlay/independence-day/dist/index.umd.js" 
+    data-autostart>
+  </script>
+</body>
+</html>
+\`\`\`
+
+Or trigger manually via global \`window.IndependenceDayOverlay\`:
+
+\`\`\`html
+<script src="https://cdn.jsdelivr.net/npm/@event-overlay/independence-day/dist/index.umd.js"></script>
+<script>
+  window.IndependenceDayOverlay.start({
+    maxKites: 8,
+    maxJets: 3
+  });
+</script>
+\`\`\`
+
+---
+
+### 4. Vue 3 / Nuxt
+
+\`\`\`vue
+<script setup>
+import { onMounted, onUnmounted } from 'vue';
+import { start, stop } from '@event-overlay/independence-day';
+
+onMounted(() => {
+  start({ waveOpacity: 0.6, maxKites: 6, maxFlags: 3 });
+});
+
+onUnmounted(() => {
+  stop();
+});
+</script>
+
+<template>
+  <main>
+    <h1>Happy Independence Day! 🇮🇳</h1>
+  </main>
+</template>
+\`\`\`
+
+---
+
+## ⚙️ Configuration & Props Reference
+
+| Prop / Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| \`showWave\` | \`boolean\` | \`true\` | Enables or disables the flowing Tricolor Silk Banner Wave. |
+| \`waveOpacity\` | \`number\` | \`0.65\` | Transparency level of the flowing silk wave (\`0.0\` to \`1.0\`). |
+| \`maxFlags\` | \`number\` | \`3\` | Maximum simultaneous waving Indian National Flags (*Tiranga*). |
+| \`maxKites\` | \`number\` | \`6\` | Maximum simultaneous flying kites with swaying ribbons. |
+| \`maxJets\` | \`number\` | \`2\` | Number of fighter jets crossing with saffron-white-green vapor trails. |
+| \`maxFireworks\` | \`number\` | \`3\` | Maximum bursting fireworks and sparkler clusters. |
+| \`maxPetals\` | \`number\` | \`35\` | Drifting marigold (*Genda*) and rose petals floating with wind. |
+| \`showGlow\` | \`boolean\` | \`true\` | Ambient Saffron top glow and Green bottom glow. |
+| \`opacity\` | \`number\` | \`0.95\` | Overall canvas master opacity (\`0.0\` to \`1.0\`). |
+| \`zIndex\` | \`number\` | \`99999\` | CSS z-index applied to the canvas overlay. |
+| \`duration\` | \`number\` | \`0\` | Auto-stop timer in milliseconds (\`0\` = continuous). |
+| \`active\` | \`boolean\` | \`true\` | *(React only)* Toggle animation on/off dynamically. |
+| \`container\` | \`string\` | \`'body'\` | DOM element selector to append the canvas to. |
+
+---
+
+## 🛠️ TypeScript Support
+
+\`\`\`typescript
+import type { 
+  IndependenceDayOverlayProps, 
+  IndependenceDayOptions 
+} from '@event-overlay/independence-day';
+
+const options: IndependenceDayOptions = {
+  waveOpacity: 0.7,
+  maxFlags: 4,
+  maxKites: 8,
+  maxJets: 3,
+  maxFireworks: 5,
+  maxPetals: 50
+};
+\`\`\`
+
+---
+
+## 🔍 Keywords & Discovery
+
+\`independence-day\` • \`indian-independence-day\` • \`15-august\` • \`republic-day\` • \`26-january\` • \`tiranga\` • \`indian-flag\` • \`tricolor\` • \`kites\` • \`patriotism\` • \`airshow\` • \`fighter-jets\` • \`fireworks\` • \`azadi-ka-amrit-mahotsav\` • \`react-independence-day\` • \`celebration-overlay\` • \`canvas-animation\` • \`react-festive\` • \`nextjs-overlay\` • \`web-animation\` • \`canvas-overlay\` • \`zero-dependency\`
+
+---
+
 ## 📄 License
-MIT © Vikas
-`, 'utf-8');
+
+MIT © [Vikas](https://github.com/DevCodeHub99)
+`;
+
+fs.writeFileSync(path.join(pkgIndepDir, 'README.md'), indepReadmeContent, 'utf-8');
 
 // B. @event-overlay/holi
 const pkgHoliDir = path.join(PACKAGES_DIR, 'holi');
@@ -673,7 +895,7 @@ fs.writeFileSync(path.join(pkgHoliDir, 'LICENSE'), licenseText, 'utf-8');
 const pkgHoliJson = {
     name: "@event-overlay/holi",
     version: CURRENT_VERSION,
-    description: "🎨 Vibrant, high-performance Holi festival celebration overlay. Zero dependencies.",
+    description: "🎨 Vibrant, ultra-high-performance Holi festival celebration overlay with water balloons, pichkaari streams, and gulal colors. Zero dependencies.",
     main: "dist/index.cjs",
     module: "dist/index.js",
     types: "dist/index.d.ts",
@@ -695,7 +917,34 @@ const pkgHoliJson = {
     publishConfig: {
         access: "public"
     },
-    keywords: ["holi", "colors", "water-balloon", "pichkaari", "gulal", "overlay", "react", "canvas"],
+    keywords: [
+        "holi",
+        "holi-overlay",
+        "holi-festival",
+        "festival-of-colours",
+        "rangotsav",
+        "gulal",
+        "pichkaari",
+        "water-balloon",
+        "colors-festival",
+        "celebration-overlay",
+        "festive-overlay",
+        "canvas-confetti",
+        "particle-effects",
+        "particle-system",
+        "react-holi",
+        "react-celebration",
+        "react-festive",
+        "nextjs-overlay",
+        "indian-festivals",
+        "happy-holi",
+        "web-animation",
+        "canvas-overlay",
+        "zero-dependency",
+        "colors",
+        "react",
+        "canvas"
+    ],
     author: "Vikas",
     license: "MIT",
     repository: {
@@ -706,44 +955,270 @@ const pkgHoliJson = {
 };
 fs.writeFileSync(path.join(pkgHoliDir, 'package.json'), JSON.stringify(pkgHoliJson, null, 2), 'utf-8');
 
-fs.writeFileSync(path.join(pkgHoliDir, 'README.md'), `# @event-overlay/holi 🎨
+const holiReadmeContent = `<p align="center">
+  <span style="font-size: 72px;">🎨</span>
+</p>
 
-> High-performance, zero-dependency Holi festival celebration overlay.
+<h1 align="center">@event-overlay/holi</h1>
+
+<p align="center">
+  <strong>Vibrant, ultra-high-performance Holi Festival celebration overlay for any website, React, Next.js, Vue, or Vanilla JS app.</strong>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@event-overlay/holi"><img src="https://img.shields.io/npm/v/@event-overlay/holi.svg?style=flat-square&color=ff1493" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/@event-overlay/holi"><img src="https://img.shields.io/npm/dm/@event-overlay/holi.svg?style=flat-square&color=32cd32" alt="npm downloads" /></a>
+  <img src="https://img.shields.io/badge/bundle%20size-~8KB%20gzipped-00bfff?style=flat-square" alt="Bundle Size" />
+  <img src="https://img.shields.io/badge/dependencies-0-brightgreen?style=flat-square" alt="Zero Dependencies" />
+  <img src="https://img.shields.io/badge/framework-agnostic-9400d3?style=flat-square" alt="Framework Agnostic" />
+  <img src="https://img.shields.io/badge/typescript-ready-3178c6?style=flat-square" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/license-MIT-ffdf00?style=flat-square" alt="MIT License" />
+</p>
+
+---
+
+## 🌈 Overview
+
+Bring the exuberant spirit and colors of **Holi (Festival of Colours / Rangotsav)** to your digital products! \`@event-overlay/holi\` is a plug-and-play celebration overlay that creates stunning, realistic festive animations directly over your web page using a hardware-accelerated HTML5 Canvas 2D engine.
+
+Designed for modern web applications, it delivers buttery-smooth 60 FPS animations without impacting your site's performance, layout, or user interactions.
+
+---
+
+## ✨ Features
+
+- 🎈 **Physics-Based Water Balloons**: Balloons launch dynamically from screen edges and burst upon impact into thousands of water droplets and organic color stains.
+- 🔫 **Pichkaari (Water Gun) Streams**: Continuous high-velocity streams that arc and sweep gracefully across the screen.
+- 💥 **Gulal (Powder) Explosions**: Soft, billowing organic color clouds that expand and gently dissolve into the atmosphere.
+- 🌸 **Curated 9-Color Festive Palette**: Features vibrant traditional Holi pigments (Gulal Pink, Marigold Yellow, Parrot Green, Indigo Blue, Saffron Orange, Royal Violet, Cyan, Deep Pink, and Lime) or pass your own custom brand/festive colors.
+- 🎨 **Ambient Watercolor Stains**: Soft pulsating corner glows simulating festive color stains on the edges of the screen.
+- ⚡ **Zero Dependencies & Lightweight**: <8KB gzipped with zero external library overhead.
+- 🛡️ **Non-Intrusive & Accessible**: Layered with \`pointer-events: none\` and \`aria-hidden="true"\`, ensuring your links, buttons, forms, and screen readers continue to function flawlessly.
+- 🧩 **Universal Compatibility**: Works out of the box with **React**, **Next.js (App & Pages Router)**, **Vue**, **Svelte**, **Angular**, **Vite**, and plain **HTML CDN script tags**.
+
+---
 
 ## 📦 Installation
+
+Install via your preferred package manager:
+
 \`\`\`bash
+# npm
 npm install @event-overlay/holi
+
+# yarn
+yarn add @event-overlay/holi
+
+# pnpm
+pnpm add @event-overlay/holi
+
+# bun
+bun add @event-overlay/holi
 \`\`\`
 
-## 🚀 Usage
+---
 
-### React / Next.js
-\`\`\`jsx
+## 🚀 Quick Start Guide
+
+### 1. React & Next.js (App Router / Pages Router)
+
+Simply import the \`HoliOverlay\` component and drop it anywhere in your component tree (e.g., \`layout.tsx\` or \`App.tsx\`):
+
+\`\`\`tsx
 import { HoliOverlay } from '@event-overlay/holi/react';
 
 export default function App() {
   return (
     <main>
-      <HoliOverlay maxBalloons={15} maxPichkaaris={4} opacity={0.95} />
-      <h1>Happy Holi! 🎨</h1>
+      {/* Celebration overlay */}
+      <HoliOverlay 
+        maxBalloons={15} 
+        maxPichkaaris={4} 
+        showAmbient={true} 
+        opacity={0.95} 
+      />
+
+      <div style={{ position: 'relative', zIndex: 1, padding: '4rem', textAlign: 'center' }}>
+        <h1>🎉 Happy Holi! Wish you a vibrant celebration! 🎨</h1>
+        <p>Your interactive site content remains 100% clickable and functional.</p>
+      </div>
     </main>
   );
 }
 \`\`\`
 
-### Vanilla JavaScript
-\`\`\`javascript
-import { start, stop } from '@event-overlay/holi';
+> **Next.js App Router Note**: The \`HoliOverlay\` component is marked with \`'use client'\` under the hood, making it seamlessly compatible with Next.js 13/14/15 Server and Client Components.
 
-start({
-  maxBalloons: 15,
-  maxPichkaaris: 4
+---
+
+### 2. Vanilla JavaScript / TypeScript (Vite, Webpack, ES Modules)
+
+\`\`\`javascript
+import { start, stop, toggle, isRunning } from '@event-overlay/holi';
+
+// Start celebration overlay with custom settings
+const instance = start({
+  maxBalloons: 20,
+  maxPichkaaris: 5,
+  showAmbient: true,
+  opacity: 0.9
 });
+
+// Programmatic controls:
+// stop();        // Stops the animation and cleans up canvas
+// toggle();      // Toggles active/stopped state
+// isRunning();   // Returns true if overlay is currently animating
 \`\`\`
 
+---
+
+### 3. HTML CDN Drop-in Script Tag (No Build Tools Required)
+
+Include the standalone bundle via jsDelivr or unpkg before the closing \`</body>\` tag. Add \`data-autostart\` to start automatically:
+
+\`\`\`html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Holi Celebration</title>
+</head>
+<body>
+  <h1>Welcome to Our Store! 🎨</h1>
+
+  <!-- 1-line CDN Drop-in -->
+  <script 
+    src="https://cdn.jsdelivr.net/npm/@event-overlay/holi/dist/index.umd.js" 
+    data-autostart>
+  </script>
+</body>
+</html>
+\`\`\`
+
+Or trigger manually via the global \`window.HoliOverlay\` object:
+
+\`\`\`html
+<script src="https://cdn.jsdelivr.net/npm/@event-overlay/holi/dist/index.umd.js"></script>
+<script>
+  window.HoliOverlay.start({
+    maxBalloons: 12,
+    maxPichkaaris: 3
+  });
+</script>
+\`\`\`
+
+---
+
+### 4. Vue 3 / Nuxt
+
+\`\`\`vue
+<script setup>
+import { onMounted, onUnmounted } from 'vue';
+import { start, stop } from '@event-overlay/holi';
+
+onMounted(() => {
+  start({ maxBalloons: 15, maxPichkaaris: 4 });
+});
+
+onUnmounted(() => {
+  stop();
+});
+</script>
+
+<template>
+  <main>
+    <h1>Happy Holi! 🎨</h1>
+  </main>
+</template>
+\`\`\`
+
+---
+
+## ⚙️ Configuration & Props Reference
+
+Customize every aspect of the celebration to fit your design:
+
+| Prop / Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| \`maxBalloons\` | \`number\` | \`15\` | Maximum number of concurrent water balloons launched from viewport boundaries. |
+| \`maxPichkaaris\` | \`number\` | \`4\` | Maximum number of simultaneous pichkaari (water gun) streams sweeping across the screen. |
+| \`colors\` | \`ColorRGB[]\` | *9-color preset* | Custom RGB color palette array for balloons, splash stains, water streams, and powder particles. |
+| \`showAmbient\` | \`boolean\` | \`true\` | Enables pulsating corner watercolor splash gradients. |
+| \`opacity\` | \`number\` | \`0.95\` | Master canvas opacity (\`0.0\` to \`1.0\`). |
+| \`zIndex\` | \`number\` | \`99999\` | CSS z-index applied to the fixed canvas overlay. |
+| \`duration\` | \`number\` | \`0\` | Auto-stop countdown in milliseconds (\`0\` = runs continuously until stopped). |
+| \`active\` | \`boolean\` | \`true\` | *(React only)* Controls whether the overlay is actively rendering. |
+| \`container\` | \`string\` | \`'body'\` | Target selector or DOM container where canvas should be mounted. |
+
+---
+
+## 🎨 Custom Color Palette Example
+
+You can override the default festive palette with your own custom RGB colors:
+
+\`\`\`tsx
+import { HoliOverlay } from '@event-overlay/holi/react';
+
+const myFestiveColors = [
+  { r: 255, g: 0, b: 128 },   // Vivid Magenta
+  { r: 0, g: 230, b: 255 },   // Electric Cyan
+  { r: 255, g: 195, b: 0 },   // Sun Yellow
+  { r: 124, g: 252, b: 0 }    // Lawn Green
+];
+
+export default function CustomHoli() {
+  return (
+    <HoliOverlay 
+      colors={myFestiveColors}
+      maxBalloons={18}
+      maxPichkaaris={6}
+    />
+  );
+}
+\`\`\`
+
+---
+
+## 🛠️ TypeScript Support
+
+Full TypeScript definitions are included out of the box:
+
+\`\`\`typescript
+import type { HoliOverlayProps, HoliOptions, ColorRGB } from '@event-overlay/holi';
+
+const config: HoliOptions = {
+  maxBalloons: 20,
+  maxPichkaaris: 5,
+  colors: [
+    { r: 255, g: 87, b: 51 },
+    { r: 255, g: 189, b: 51 }
+  ]
+};
+\`\`\`
+
+---
+
+## 🎯 High-Performance Engine Design
+
+1. **Sub-Pixel Particle Simulation**: Powered by an internal physics loop with velocity damping, randomized mass, realistic trajectory drag, and gravity curves.
+2. **Zero Allocation Rendering**: Reuses coordinate buffers and optimized canvas paths to prevent memory churn and garbage collection hiccups.
+3. **Adaptive Viewport Resizing**: Automatically listens to window resize and device pixel ratio (DPR) changes for crystal-clear visuals on high-density Retina screens.
+4. **Clean Teardown**: Automatically cancels \`requestAnimationFrame\` loops and removes canvas elements on unmount.
+
+---
+
+## 🔍 Keywords & Discovery
+
+\`holi\` • \`holi-overlay\` • \`holi-festival\` • \`festival-of-colors\` • \`rangotsav\` • \`gulal\` • \`pichkaari\` • \`water-balloon\` • \`colors-festival\` • \`celebration-overlay\` • \`festive-overlay\` • \`canvas-confetti\` • \`particle-effects\` • \`react-holi\` • \`react-celebration\` • \`react-festive\` • \`nextjs-overlay\` • \`indian-festivals\` • \`happy-holi\` • \`web-animation\` • \`canvas-overlay\` • \`zero-dependency\`
+
+---
+
 ## 📄 License
-MIT © Vikas
-`, 'utf-8');
+
+MIT © [Vikas](https://github.com/DevCodeHub99)
+`;
+
+fs.writeFileSync(path.join(pkgHoliDir, 'README.md'), holiReadmeContent, 'utf-8');
 
 // C. @event-overlay/core
 const pkgCoreDir = path.join(PACKAGES_DIR, 'core');
@@ -757,7 +1232,7 @@ fs.writeFileSync(path.join(pkgCoreDir, 'LICENSE'), licenseText, 'utf-8');
 const pkgCoreJson = {
     name: "@event-overlay/core",
     version: CURRENT_VERSION,
-    description: "🎆 High-performance celebration overlay engine with tree-shakeable event subpaths. Zero dependencies.",
+    description: "🎆 High-performance celebration overlay engine with tree-shakeable event subpaths for Independence Day, Holi, and custom festive celebrations. Zero dependencies.",
     main: "dist/event-overlay.cjs",
     module: "dist/event-overlay.js",
     types: "dist/event-overlay.d.ts",
@@ -785,7 +1260,26 @@ const pkgCoreJson = {
     publishConfig: {
         access: "public"
     },
-    keywords: ["event-overlay", "independence-day", "holi", "celebration", "canvas", "react", "monorepo"],
+    keywords: [
+        "event-overlay",
+        "celebration-overlay",
+        "festive-overlay",
+        "holi",
+        "holi-overlay",
+        "independence-day",
+        "tiranga",
+        "fireworks",
+        "confetti",
+        "canvas-animation",
+        "particle-effects",
+        "react-celebration",
+        "react-festive",
+        "zero-dependency",
+        "monorepo",
+        "canvas-overlay",
+        "canvas",
+        "react"
+    ],
     author: "Vikas",
     license: "MIT",
     repository: {
@@ -796,22 +1290,163 @@ const pkgCoreJson = {
 };
 fs.writeFileSync(path.join(pkgCoreDir, 'package.json'), JSON.stringify(pkgCoreJson, null, 2), 'utf-8');
 
-fs.writeFileSync(path.join(pkgCoreDir, 'README.md'), `# @event-overlay/core 🎆
+const coreReadmeContent = `<p align="center">
+  <span style="font-size: 72px;">🎆</span>
+</p>
 
-> Unified multi-event celebration overlay framework.
+<h1 align="center">@event-overlay/core</h1>
+
+<p align="center">
+  <strong>The high-performance, modular celebration overlay framework for web applications. Zero dependencies, 60 FPS Canvas 2D engine, and tree-shakeable festival modules.</strong>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@event-overlay/core"><img src="https://img.shields.io/npm/v/@event-overlay/core.svg?style=flat-square&color=38bdf8" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/@event-overlay/core"><img src="https://img.shields.io/npm/dm/@event-overlay/core.svg?style=flat-square&color=32cd32" alt="npm downloads" /></a>
+  <img src="https://img.shields.io/badge/bundle%20size-~12KB%20gzipped-00bfff?style=flat-square" alt="Bundle Size" />
+  <img src="https://img.shields.io/badge/dependencies-0-brightgreen?style=flat-square" alt="Zero Dependencies" />
+  <img src="https://img.shields.io/badge/framework-agnostic-9400d3?style=flat-square" alt="Framework Agnostic" />
+  <img src="https://img.shields.io/badge/typescript-ready-3178c6?style=flat-square" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/license-MIT-ffdf00?style=flat-square" alt="MIT License" />
+</p>
+
+---
+
+## 🌟 Overview
+
+\`@event-overlay/core\` is an extensible celebration overlay engine built for high-performance festive visual effects in web apps. Whether you need Indian Independence Day celebrations, Holi festival color splashes, Diwali fireworks, New Year confetti, or custom interactive animations, the core engine manages the particle physics, responsive canvas scaling, frame scheduling, and non-blocking teardown seamlessly.
+
+---
 
 ## 📦 Installation
+
 \`\`\`bash
+# npm
 npm install @event-overlay/core
+
+# yarn
+yarn add @event-overlay/core
+
+# pnpm
+pnpm add @event-overlay/core
+
+# bun
+bun add @event-overlay/core
 \`\`\`
 
-## 🚀 Subpaths
-- \`@event-overlay/core/independence-day\`
-- \`@event-overlay/core/holi\`
+---
+
+## 🚀 Tree-Shakeable Subpaths
+
+Import only what you need to keep your bundle minimal:
+
+| Subpath | Description |
+| :--- | :--- |
+| \`@event-overlay/core\` | Unified engine with built-in Independence Day & Holi events |
+| \`@event-overlay/core/independence-day\` | Standalone Indian Independence Day celebration event |
+| \`@event-overlay/core/holi\` | Standalone Holi festival water balloon & pichkaari event |
+| \`@event-overlay/core/react\` | React component wrappers for all celebration events |
+
+---
+
+## 💻 Quick Usage
+
+### React & Next.js
+
+\`\`\`tsx
+import { EventOverlay, IndependenceDayOverlay, HoliOverlay } from '@event-overlay/core/react';
+
+export default function App() {
+  return (
+    <main>
+      {/* Run any event via EventOverlay */}
+      <EventOverlay event="independence-day" maxKites={6} maxFlags={3} />
+
+      {/* Or use the dedicated component */}
+      {/* <HoliOverlay maxBalloons={15} maxPichkaaris={4} /> */}
+
+      <h1>Welcome to the Celebration! 🎆</h1>
+    </main>
+  );
+}
+\`\`\`
+
+### Vanilla JavaScript
+
+\`\`\`javascript
+import { start, stop, toggle, isRunning } from '@event-overlay/core';
+
+// Start Independence Day overlay
+start({
+  event: 'independence-day',
+  maxKites: 6,
+  maxFlags: 3,
+  waveOpacity: 0.65
+});
+
+// Or start Holi overlay
+// start({
+//   event: 'holi',
+//   maxBalloons: 15,
+//   maxPichkaaris: 4
+// });
+\`\`\`
+
+---
+
+## 🧩 Building Custom Events
+
+You can easily register and plug your own custom celebration particle engines into the core runtime:
+
+\`\`\`typescript
+import { registerEvent, start, EventModule } from '@event-overlay/core';
+
+const ConfettiEvent: EventModule = {
+  name: 'new-year-confetti',
+  init(canvas, ctx, options) {
+    // Initialize particle arrays and state
+  },
+  render(canvas, ctx, delta, options) {
+    // Draw 60fps frame on Canvas 2D
+  },
+  destroy() {
+    // Cleanup particle memory
+  }
+};
+
+// Register custom event
+registerEvent(ConfettiEvent);
+
+// Launch it!
+start({ event: 'new-year-confetti' });
+\`\`\`
+
+---
+
+## ⚙️ Core Engine Configuration
+
+| Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| \`event\` | \`'independence-day' \\| 'holi' \\| string\` | \`'independence-day'\` | Name of registered event to trigger. |
+| \`opacity\` | \`number\` | \`0.95\` | Master canvas opacity (\`0.0\` to \`1.0\`). |
+| \`zIndex\` | \`number\` | \`99999\` | CSS z-index applied to fixed canvas. |
+| \`duration\` | \`number\` | \`0\` | Auto-stop timer in milliseconds (\`0\` = continuous). |
+| \`container\` | \`string\` | \`'body'\` | Target selector or DOM container where canvas attaches. |
+
+---
+
+## 🔍 Keywords & Discovery
+
+\`event-overlay\` • \`celebration-overlay\` • \`festive-overlay\` • \`canvas-animation\` • \`particle-effects\` • \`react-celebration\` • \`react-festive\` • \`independence-day\` • \`holi-overlay\` • \`holi-festival\` • \`fireworks\` • \`confetti\` • \`canvas-overlay\` • \`nextjs-animation\` • \`zero-dependency\` • \`web-animation\`
+
+---
 
 ## 📄 License
-MIT © Vikas
-`, 'utf-8');
+
+MIT © [Vikas](https://github.com/DevCodeHub99)
+`;
+
+fs.writeFileSync(path.join(pkgCoreDir, 'README.md'), coreReadmeContent, 'utf-8');
 
 console.log('✅ Monorepo Build Complete!');
 console.log('   📦 @event-overlay/independence-day  -> packages/independence-day');
