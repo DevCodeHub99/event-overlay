@@ -1,11 +1,26 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "strict": true,
-        "moduleResolution": "node"
-    },
-    "files": [
-        "dist/holi-overlay.d.ts"
-    ]
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "allowJs": true
+  },
+  "include": [
+    "src/**/*",
+    "packages/**/*",
+    "IndependenceDayOverlay.tsx",
+    "HoliOverlay.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "packages/*/dist"
+  ]
 }
