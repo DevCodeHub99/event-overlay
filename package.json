@@ -1,6 +1,6 @@
 {
     "name": "@event-overlay/core",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "type": "module",
     "description": "🎆 High-performance celebration overlay framework with dedicated packages for Independence Day, Holi, and custom festive celebrations. Zero dependencies.",
     "main": "dist/event-overlay.cjs",

@@ -1,6 +1,6 @@
 {
   "name": "@event-overlay/core",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "🎆 High-performance celebration overlay engine with tree-shakeable event subpaths for Independence Day, Holi, and custom festive celebrations. Zero dependencies.",
   "main": "dist/event-overlay.cjs",
   "module": "dist/event-overlay.js",
