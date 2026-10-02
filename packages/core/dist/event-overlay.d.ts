@@ -1,7 +1,7 @@
 /**
  * TypeScript Declarations for Event Overlay Framework
  * @version 1.0.0
- * @module @devcodehub99/event-overlay
+ * @module @event-overlay/core
  */
 
 import type { FC } from 'react';

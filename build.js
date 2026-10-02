@@ -67,9 +67,10 @@ function minify(code) {
     return code
         .replace(/\/\*[\s\S]*?\*\//g, '')
         .replace(/\/\/.*$/gm, '')
-        .replace(/^\s+/gm, '')
-        .replace(/\n{2,}/g, '\n')
-        .split('\n').filter(line => line.trim().length > 0).join('\n');
+        .split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0)
+        .join(' ');
 }
 
 // ─────────────────────────────────────────────
