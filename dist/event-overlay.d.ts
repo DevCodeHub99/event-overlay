@@ -55,6 +55,16 @@ export interface HoliOptions {
     showAmbient?: boolean;
 }
 
+export interface DiwaliOptions {
+    enableFireworks?: boolean;
+    enableDiyas?: boolean;
+    enableFountains?: boolean;
+    enableSpinners?: boolean;
+    enableLanterns?: boolean;
+    sparklerCursor?: boolean;
+    colors?: ColorRGB[];
+}
+
 export declare class EventOverlayEngine {
     constructor(options?: EventOverlayOptions);
     eventId: string;
@@ -73,6 +83,7 @@ export declare function getRegisteredEventIds(): string[];
 
 export declare const IndependenceDayEvent: EventModule;
 export declare const HoliEvent: EventModule;
+export declare const DiwaliEvent: EventModule;
 
 export declare function start(eventName?: string | EventOverlayOptions, options?: EventOverlayOptions): EventOverlayEngine;
 export declare function stop(): void;
@@ -100,9 +111,18 @@ export interface HoliOverlayProps extends HoliOptions {
     active?: boolean;
 }
 
+export interface DiwaliOverlayProps extends DiwaliOptions {
+    zIndex?: number;
+    opacity?: number;
+    duration?: number;
+    container?: string;
+    active?: boolean;
+}
+
 export declare const EventOverlayReact: FC<EventOverlayReactProps>;
 export declare const IndependenceDayOverlay: FC<IndependenceDayOverlayProps>;
 export declare const HoliOverlay: FC<HoliOverlayProps>;
+export declare const DiwaliOverlay: FC<DiwaliOverlayProps>;
 
 declare const EventOverlay: {
     version: string;
@@ -116,6 +136,7 @@ declare const EventOverlay: {
     getRegisteredEventIds: typeof getRegisteredEventIds;
     IndependenceDayEvent: EventModule;
     HoliEvent: EventModule;
+    DiwaliEvent: EventModule;
     EventOverlayEngine: typeof EventOverlayEngine;
 };
 

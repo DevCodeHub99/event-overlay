@@ -31,4 +31,5 @@ jobs:
         run: |
           npm pack ./packages/independence-day --dry-run
           npm pack ./packages/holi --dry-run
+          npm pack ./packages/diwali --dry-run
           npm pack ./packages/core --dry-run

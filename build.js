@@ -36,6 +36,7 @@ const utilsSource = fs.readFileSync(path.join(SRC_DIR, 'core', 'utils.js'), 'utf
 const engineSource = fs.readFileSync(path.join(SRC_DIR, 'core', 'engine.js'), 'utf-8');
 const holiSource = fs.readFileSync(path.join(SRC_DIR, 'events', 'holi.js'), 'utf-8');
 const independenceSource = fs.readFileSync(path.join(SRC_DIR, 'events', 'independence-day.js'), 'utf-8');
+const diwaliSource = fs.readFileSync(path.join(SRC_DIR, 'events', 'diwali.js'), 'utf-8');
 
 const tsxIndep = fs.existsSync(path.join(__dirname, 'IndependenceDayOverlay.tsx'))
     ? fs.readFileSync(path.join(__dirname, 'IndependenceDayOverlay.tsx'), 'utf-8')
@@ -43,6 +44,10 @@ const tsxIndep = fs.existsSync(path.join(__dirname, 'IndependenceDayOverlay.tsx'
 
 const tsxHoli = fs.existsSync(path.join(__dirname, 'HoliOverlay.tsx'))
     ? fs.readFileSync(path.join(__dirname, 'HoliOverlay.tsx'), 'utf-8')
+    : '';
+
+const tsxDiwali = fs.existsSync(path.join(__dirname, 'DiwaliOverlay.tsx'))
+    ? fs.readFileSync(path.join(__dirname, 'DiwaliOverlay.tsx'), 'utf-8')
     : '';
 
 const licenseText = fs.existsSync(path.join(__dirname, 'LICENSE'))
@@ -62,6 +67,7 @@ const utilsClean = stripInternalExports(utilsSource);
 const engineClean = stripInternalExports(engineSource);
 const holiClean = stripInternalExports(holiSource);
 const indepClean = stripInternalExports(independenceSource);
+const diwaliClean = stripInternalExports(diwaliSource);
 
 function minify(code) {
     return code
@@ -92,9 +98,13 @@ ${holiClean}
 // ─── INDEPENDENCE DAY EVENT ───
 ${indepClean}
 
+// ─── DIWALI EVENT ───
+${diwaliClean}
+
 // Auto-register built-in events
 registerEvent(IndependenceDayEvent);
 registerEvent(HoliEvent);
+registerEvent(DiwaliEvent);
 
 let _activeInstance = null;
 
@@ -144,6 +154,7 @@ export {
     EventOverlayEngine,
     IndependenceDayEvent,
     HoliEvent,
+    DiwaliEvent,
     filterInPlace,
     randomRange,
     getSafeDPR,
@@ -162,6 +173,7 @@ const EventOverlay = {
     getRegisteredEventIds,
     IndependenceDayEvent,
     HoliEvent,
+    DiwaliEvent,
     EventOverlayEngine
 };
 
@@ -480,6 +492,131 @@ ${umdHoliCore}
 `;
 fs.writeFileSync(path.join(DIST_DIR, 'events', 'holi.umd.js'), umdHoli, 'utf-8');
 
+// ─────────────────────────────────────────────
+// 3b. Build Dedicated Package: @event-overlay/diwali
+// ─────────────────────────────────────────────
+const esmDiwali = `/**
+ * 🪔 @event-overlay/diwali v1.0.0
+ * @license MIT
+ */
+
+// ─── UTILS ───
+\${utilsClean}
+
+// ─── CORE ENGINE ───
+\${engineClean}
+
+// ─── DIWALI EVENT ───
+\${diwaliClean}
+
+registerEvent(DiwaliEvent);
+
+let _activeInstance = null;
+
+export function start(options = {}) {
+    if (_activeInstance) {
+        _activeInstance.stop();
+    }
+    const opts = Object.assign({}, options, { event: 'diwali', eventOptions: options });
+    _activeInstance = new EventOverlayEngine(opts);
+    _activeInstance.start();
+    return _activeInstance;
+}
+
+export function stop() {
+    if (_activeInstance) {
+        _activeInstance.stop();
+        _activeInstance = null;
+    }
+}
+
+export function toggle(options = {}) {
+    if (_activeInstance && _activeInstance.isRunning()) {
+        stop();
+    } else {
+        start(options);
+    }
+}
+
+export function isRunning() {
+    return _activeInstance ? _activeInstance.isRunning() : false;
+}
+
+export {
+    DiwaliEvent,
+    DIWALI_COLORS,
+    EventOverlayEngine
+};
+
+const DiwaliOverlay = {
+    version: '1.0.0',
+    start,
+    stop,
+    toggle,
+    isRunning,
+    DiwaliEvent,
+    DIWALI_COLORS,
+    EventOverlayEngine
+};
+
+export default DiwaliOverlay;
+`;
+
+fs.writeFileSync(path.join(DIST_DIR, 'events', 'diwali.js'), esmDiwali, 'utf-8');
+fs.writeFileSync(path.join(DIST_DIR, 'events', 'diwali.min.js'), minify(esmDiwali), 'utf-8');
+
+const umdDiwaliCore = esmDiwali
+    .replace(/^export\\s+default\\s+\\w+;\\s*$/gm, '')
+    .replace(/^export\\s+const\\s+/gm, 'const ')
+    .replace(/^export\\s+let\\s+/gm, 'let ')
+    .replace(/^export\\s+function\\s+/gm, 'function ')
+    .replace(/^export\\s+class\\s+/gm, 'class ')
+    .replace(/^export\\s+\\{[\\s\\S]*?\\};\\s*$/gm, '')
+    .trim();
+
+const umdDiwali = `/**
+ * 🪔 @event-overlay/diwali v1.0.0 — Standalone UMD
+ * @license MIT
+ */
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define([], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory();
+    } else {
+        root.DiwaliOverlay = factory();
+    }
+}(typeof self !== 'undefined' ? self : this, function () {
+    'use strict';
+
+\${umdDiwaliCore}
+
+    if (typeof document !== 'undefined') {
+        var _script = document.currentScript || (function () {
+            var s = document.getElementsByTagName('script');
+            return s[s.length - 1];
+        })();
+        if (_script && _script.hasAttribute('data-autostart')) {
+            var _init = function () {
+                var opts = {};
+                if (_script.getAttribute('data-z-index')) opts.zIndex = parseInt(_script.getAttribute('data-z-index'), 10);
+                if (_script.getAttribute('data-opacity')) opts.opacity = parseFloat(_script.getAttribute('data-opacity'));
+                if (_script.getAttribute('data-duration')) opts.duration = parseInt(_script.getAttribute('data-duration'), 10);
+                DiwaliOverlay.start(opts);
+            };
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', _init);
+            } else {
+                _init();
+            }
+        }
+    }
+
+    return DiwaliOverlay;
+}));
+`;
+fs.writeFileSync(path.join(DIST_DIR, 'events', 'diwali.umd.js'), umdDiwali, 'utf-8');
+
 // Copy Types
 const typesCore = fs.readFileSync(path.join(SRC_DIR, 'core', 'types.d.ts'), 'utf-8');
 fs.writeFileSync(path.join(DIST_DIR, 'event-overlay.d.ts'), typesCore, 'utf-8');
@@ -499,6 +636,14 @@ export declare const HoliOverlay: FC<HoliOverlayProps>;
 export default HoliOverlay;
 `;
 fs.writeFileSync(path.join(DIST_DIR, 'events', 'holi.d.ts'), holiDts, 'utf-8');
+
+const diwaliDts = `import type { FC } from 'react';
+import { DiwaliOptions, DiwaliOverlayProps } from '../event-overlay';
+export * from '../event-overlay';
+export declare const DiwaliOverlay: FC<DiwaliOverlayProps>;
+export default DiwaliOverlay;
+`;
+fs.writeFileSync(path.join(DIST_DIR, 'events', 'diwali.d.ts'), diwaliDts, 'utf-8');
 
 // ─────────────────────────────────────────────
 // 4. Output Dedicated Packages in /packages/*
@@ -1220,6 +1365,217 @@ MIT © [Vikas](https://github.com/DevCodeHub99)
 
 fs.writeFileSync(path.join(pkgHoliDir, 'README.md'), holiReadmeContent, 'utf-8');
 
+// B2. @event-overlay/diwali
+const pkgDiwaliDir = path.join(PACKAGES_DIR, 'diwali');
+fs.mkdirSync(pkgDiwaliDir, { recursive: true });
+fs.mkdirSync(path.join(pkgDiwaliDir, 'dist'), { recursive: true });
+
+fs.writeFileSync(path.join(pkgDiwaliDir, 'dist', 'index.js'), esmDiwali, 'utf-8');
+fs.writeFileSync(path.join(pkgDiwaliDir, 'dist', 'index.min.js'), minify(esmDiwali), 'utf-8');
+fs.writeFileSync(path.join(pkgDiwaliDir, 'dist', 'index.umd.js'), umdDiwali, 'utf-8');
+fs.writeFileSync(path.join(pkgDiwaliDir, 'dist', 'index.cjs'), umdDiwali, 'utf-8');
+fs.writeFileSync(path.join(pkgDiwaliDir, 'dist', 'index.d.ts'), `import type { FC } from 'react';
+
+export interface ColorRGB {
+    r: number;
+    g: number;
+    b: number;
+}
+
+export interface DiwaliOptions {
+    enableFireworks?: boolean;
+    enableDiyas?: boolean;
+    enableFountains?: boolean;
+    enableSpinners?: boolean;
+    enableLanterns?: boolean;
+    sparklerCursor?: boolean;
+    colors?: ColorRGB[];
+}
+
+export interface DiwaliOverlayProps extends DiwaliOptions {
+    zIndex?: number;
+    opacity?: number;
+    duration?: number;
+    container?: string;
+    active?: boolean;
+}
+
+export declare function start(options?: DiwaliOptions): any;
+export declare function stop(): void;
+export declare function toggle(options?: DiwaliOptions): void;
+export declare function isRunning(): boolean;
+
+export declare const DiwaliOverlay: FC<DiwaliOverlayProps>;
+export default DiwaliOverlay;
+`, 'utf-8');
+
+if (tsxDiwali) {
+    fs.writeFileSync(path.join(pkgDiwaliDir, 'DiwaliOverlay.tsx'), tsxDiwali, 'utf-8');
+}
+fs.writeFileSync(path.join(pkgDiwaliDir, 'LICENSE'), licenseText, 'utf-8');
+
+const pkgDiwaliJson = {
+    name: "@event-overlay/diwali",
+    version: CURRENT_VERSION,
+    description: "🪔 Dazzling, ultra-high-performance Diwali celebration overlay for React, Next.js, Vue, and Vanilla JS. Grand fireworks, diyas, flowerpot fountains, and sparklers. Zero dependencies.",
+    main: "dist/index.cjs",
+    module: "dist/index.js",
+    types: "dist/index.d.ts",
+    browser: "dist/index.umd.js",
+    exports: {
+        ".": {
+            import: "./dist/index.js",
+            require: "./dist/index.cjs",
+            types: "./dist/index.d.ts",
+            default: "./dist/index.js"
+        },
+        "./react": {
+            import: "./DiwaliOverlay.tsx",
+            types: "./dist/index.d.ts"
+        },
+        "./umd": "./dist/index.umd.js"
+    },
+    sideEffects: false,
+    publishConfig: {
+        access: "public"
+    },
+    keywords: [
+        "diwali",
+        "diwali-overlay",
+        "deepavali",
+        "festival-of-lights",
+        "diyas",
+        "fireworks",
+        "crackers",
+        "anar",
+        "chakri",
+        "phuljhadi",
+        "sparklers",
+        "sky-lanterns",
+        "celebration-overlay",
+        "festive-overlay",
+        "canvas-confetti",
+        "particle-effects",
+        "react-diwali",
+        "react-celebration",
+        "react-festive",
+        "nextjs-overlay",
+        "indian-festivals",
+        "happy-diwali",
+        "web-animation",
+        "canvas-overlay",
+        "zero-dependency"
+    ],
+    author: "Vikas",
+    license: "MIT",
+    repository: {
+        type: "git",
+        url: "git+https://github.com/DevCodeHub99/event-overlay.git",
+        directory: "packages/diwali"
+    }
+};
+fs.writeFileSync(path.join(pkgDiwaliDir, 'package.json'), JSON.stringify(pkgDiwaliJson, null, 2), 'utf-8');
+
+const diwaliReadmeContent = `<p align="center">
+  <span style="font-size: 72px;">🪔</span>
+</p>
+
+<h1 align="center">@event-overlay/diwali</h1>
+
+<p align="center">
+  <strong>Luminous, ultra-high-performance Diwali celebration canvas overlay for modern web applications.</strong>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@event-overlay/diwali"><img src="https://img.shields.io/npm/v/@event-overlay/diwali.svg?style=flat-square&color=ffd700" alt="npm version" /></a>
+  <img src="https://img.shields.io/badge/bundle%20size-~9KB%20gzipped-00bfff?style=flat-square" alt="Bundle Size" />
+  <img src="https://img.shields.io/badge/dependencies-0-brightgreen?style=flat-square" alt="Zero Dependencies" />
+  <img src="https://img.shields.io/badge/framework-agnostic-9400d3?style=flat-square" alt="Framework Agnostic" />
+  <img src="https://img.shields.io/badge/typescript-ready-3178c6?style=flat-square" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/license-MIT-ffdf00?style=flat-square" alt="MIT License" />
+</p>
+
+---
+
+## 🪔 Overview
+
+Celebrate **Diwali (Deepavali — The Festival of Lights)** on your website or web app! \`@event-overlay/diwali\` brings the radiant energy and visual majesty of Diwali to any digital screen at buttery-smooth 60 FPS.
+
+Featuring realistic **Sky Rockets & Aerial Shells (Willow, Peony, Chrysanthemum)**, **Clay Diyas with natural flickering flames**, **Anar (Golden Fountains)**, **Chakri (Ground Spinners)**, **Akash Kandil (Sky Lanterns)**, and **Interactive Phuljhadi (Sparkler Cursor)**.
+
+---
+
+## ✨ Festive Elements
+
+- 🎆 **Grand Aerial Fireworks**: Multi-phase rocket fireworks with realistic trails and explosive aerial spherical bursts.
+- 🪔 **Clay Diyas (Deepam)**: Terracotta oil lamps arranged along the bottom edge with organic flickering flame and warm ambient halo.
+- 🌋 **Anar (Golden Fountains)**: Conical flowerpot fireworks shooting vertical streams of dazzling golden sparks.
+- 💫 **Chakri (Ground Spinners)**: High-speed ground wheels emitting spiral spark vortexes.
+- 🏮 **Akash Kandil (Sky Lanterns)**: Paper lanterns gently floating into the night sky with sinusoidal wind sway.
+- ✨ **Interactive Phuljhadi (Sparkler Cursor)**: Pointer motion generates crackling starburst sparks with additive light blending.
+- ⚡ **Zero Dependencies & Lightweight**: <9KB gzipped with zero external library overhead.
+- 🛡️ **Non-Intrusive**: Layered with \`pointer-events: none\` and \`aria-hidden="true"\` so your app remains 100% interactive.
+
+---
+
+## 📦 Installation
+
+\`\`\`bash
+# npm
+npm install @event-overlay/diwali
+
+# yarn
+yarn add @event-overlay/diwali
+
+# pnpm
+pnpm add @event-overlay/diwali
+\`\`\`
+
+---
+
+## 🚀 Quick Start Guide
+
+### React & Next.js
+
+\`\`\`tsx
+import { DiwaliOverlay } from '@event-overlay/diwali/react';
+
+export default function App() {
+  return (
+    <main>
+      <DiwaliOverlay 
+        enableFireworks={true}
+        enableDiyas={true}
+        enableFountains={true}
+        sparklerCursor={true}
+      />
+      <h1>Happy Diwali! 🪔✨</h1>
+    </main>
+  );
+}
+\`\`\`
+
+### Vanilla JavaScript
+
+\`\`\`javascript
+import { start, stop } from '@event-overlay/diwali';
+
+const overlay = start({
+  enableFireworks: true,
+  enableDiyas: true,
+  sparklerCursor: true
+});
+\`\`\`
+
+---
+
+## 📄 License
+
+MIT © [Vikas](https://github.com/DevCodeHub99)
+`;
+
+fs.writeFileSync(path.join(pkgDiwaliDir, 'README.md'), diwaliReadmeContent, 'utf-8');
+
 // C. @event-overlay/core
 const pkgCoreDir = path.join(PACKAGES_DIR, 'core');
 fs.mkdirSync(pkgCoreDir, { recursive: true });
@@ -1232,7 +1588,7 @@ fs.writeFileSync(path.join(pkgCoreDir, 'LICENSE'), licenseText, 'utf-8');
 const pkgCoreJson = {
     name: "@event-overlay/core",
     version: CURRENT_VERSION,
-    description: "🎆 High-performance celebration overlay engine with tree-shakeable event subpaths for Independence Day, Holi, and custom festive celebrations. Zero dependencies.",
+    description: "🎆 High-performance celebration overlay engine with tree-shakeable event subpaths for Independence Day, Holi, Diwali, and custom festive celebrations. Zero dependencies.",
     main: "dist/event-overlay.cjs",
     module: "dist/event-overlay.js",
     types: "dist/event-overlay.d.ts",
@@ -1252,9 +1608,14 @@ const pkgCoreJson = {
             import: "./dist/events/holi.js",
             types: "./dist/events/holi.d.ts"
         },
+        "./diwali": {
+            import: "./dist/events/diwali.js",
+            types: "./dist/events/diwali.d.ts"
+        },
         "./umd": "./dist/event-overlay.umd.js",
         "./umd/independence-day": "./dist/events/independence-day.umd.js",
-        "./umd/holi": "./dist/events/holi.umd.js"
+        "./umd/holi": "./dist/events/holi.umd.js",
+        "./umd/diwali": "./dist/events/diwali.umd.js"
     },
     sideEffects: false,
     publishConfig: {
@@ -1451,5 +1812,6 @@ fs.writeFileSync(path.join(pkgCoreDir, 'README.md'), coreReadmeContent, 'utf-8')
 console.log('✅ Monorepo Build Complete!');
 console.log('   📦 @event-overlay/independence-day  -> packages/independence-day');
 console.log('   📦 @event-overlay/holi              -> packages/holi');
+console.log('   📦 @event-overlay/diwali            -> packages/diwali');
 console.log('   📦 @event-overlay/core              -> packages/core');
 console.log('   📁 Legacy Unified dist/             -> dist/');

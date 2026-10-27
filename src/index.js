@@ -14,10 +14,12 @@ import {
 } from './core/engine.js';
 import { IndependenceDayEvent } from './events/independence-day.js';
 import { HoliEvent } from './events/holi.js';
+import { DiwaliEvent } from './events/diwali.js';
 
 // Auto-register built-in event modules
 registerEvent(IndependenceDayEvent);
 registerEvent(HoliEvent);
+registerEvent(DiwaliEvent);
 
 // Singleton active instance pointer
 let _activeInstance = null;
@@ -92,7 +94,8 @@ export {
     getRegisteredEventIds,
     EventOverlayEngine,
     IndependenceDayEvent,
-    HoliEvent
+    HoliEvent,
+    DiwaliEvent
 };
 
 const EventOverlay = {
@@ -107,6 +110,7 @@ const EventOverlay = {
     getRegisteredEventIds,
     IndependenceDayEvent,
     HoliEvent,
+    DiwaliEvent,
     EventOverlayEngine
 };
 

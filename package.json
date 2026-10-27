@@ -1,6 +1,6 @@
 {
     "name": "@event-overlay/core",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "type": "module",
     "description": "🎆 High-performance celebration overlay framework with dedicated packages for Independence Day, Holi, and custom festive celebrations. Zero dependencies.",
     "main": "dist/event-overlay.cjs",
@@ -25,6 +25,10 @@
             "import": "./dist/events/holi.js",
             "types": "./dist/events/holi.d.ts"
         },
+        "./diwali": {
+            "import": "./dist/events/diwali.js",
+            "types": "./dist/events/diwali.d.ts"
+        },
         "./react": {
             "import": "./src/react/index.jsx",
             "types": "./dist/event-overlay.d.ts"
@@ -37,9 +41,14 @@
             "import": "./src/react/holi.jsx",
             "types": "./dist/events/holi.d.ts"
         },
+        "./react/diwali": {
+            "import": "./src/react/diwali.jsx",
+            "types": "./dist/events/diwali.d.ts"
+        },
         "./umd": "./dist/event-overlay.umd.js",
         "./umd/independence-day": "./dist/events/independence-day.umd.js",
-        "./umd/holi": "./dist/events/holi.umd.js"
+        "./umd/holi": "./dist/events/holi.umd.js",
+        "./umd/diwali": "./dist/events/diwali.umd.js"
     },
     "sideEffects": false,
     "files": [
@@ -48,6 +57,7 @@
         "packages",
         "IndependenceDayOverlay.tsx",
         "HoliOverlay.tsx",
+        "DiwaliOverlay.tsx",
         "README.md",
         "LICENSE"
     ],
@@ -56,6 +66,7 @@
         "dev": "npx -y http-server . -p 3000 -o /index.html",
         "publish:independence-day": "npm publish ./packages/independence-day --access public",
         "publish:holi": "npm publish ./packages/holi --access public",
+        "publish:diwali": "npm publish ./packages/diwali --access public",
         "publish:core": "npm publish ./packages/core --access public",
         "publish:all": "npm run build && npm publish --workspaces --access public"
     },

@@ -1,0 +1,60 @@
+{
+  "name": "@event-overlay/diwali",
+  "version": "1.0.3",
+  "description": "🪔 Dazzling, ultra-high-performance Diwali celebration overlay for React, Next.js, Vue, and Vanilla JS. Grand fireworks, diyas, flowerpot fountains, and sparklers. Zero dependencies.",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "browser": "dist/index.umd.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./react": {
+      "import": "./DiwaliOverlay.tsx",
+      "types": "./dist/index.d.ts"
+    },
+    "./umd": "./dist/index.umd.js"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "diwali",
+    "diwali-overlay",
+    "deepavali",
+    "festival-of-lights",
+    "diyas",
+    "fireworks",
+    "crackers",
+    "anar",
+    "chakri",
+    "phuljhadi",
+    "sparklers",
+    "sky-lanterns",
+    "celebration-overlay",
+    "festive-overlay",
+    "canvas-confetti",
+    "particle-effects",
+    "react-diwali",
+    "react-celebration",
+    "react-festive",
+    "nextjs-overlay",
+    "indian-festivals",
+    "happy-diwali",
+    "web-animation",
+    "canvas-overlay",
+    "zero-dependency"
+  ],
+  "author": "Vikas",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevCodeHub99/event-overlay.git",
+    "directory": "packages/diwali"
+  }
+}

@@ -198,6 +198,13 @@
             -webkit-text-fill-color: transparent;
         }
 
+        h1.diwali-theme {
+            background: linear-gradient(135deg, #FFD700 0%, #FF8C00 40%, #FF4500 75%, #FFD700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.4));
+        }
+
         p.hero-desc {
             font-size: 1.12rem;
             color: var(--text-secondary);
@@ -703,6 +710,10 @@
                         <span>🎨</span>
                         <span>Holi Festival</span>
                     </button>
+                    <button class="nav-btn" data-event="diwali">
+                        <span>🪔</span>
+                        <span>Diwali Festival</span>
+                    </button>
                 </div>
             </div>
         </header>
@@ -838,6 +849,15 @@ start('diwali');</code></pre>
                 maxPichkaaris: 4,
                 opacity: 0.95,
                 showAmbient: true
+            },
+            'diwali': {
+                enableFireworks: true,
+                enableDiyas: true,
+                enableFountains: true,
+                enableSpinners: true,
+                enableLanterns: true,
+                sparklerCursor: true,
+                opacity: 0.95
             }
         };
 
@@ -854,6 +874,12 @@ start('diwali');</code></pre>
                 { name: '💥 Water Balloon Blast', cfg: { maxBalloons: 25, maxPichkaaris: 2, opacity: 0.95, showAmbient: true } },
                 { name: '🔫 Pichkaari Showdown', cfg: { maxBalloons: 6, maxPichkaaris: 6, opacity: 0.95, showAmbient: true } },
                 { name: '🌸 Gentle Festive Glow', cfg: { maxBalloons: 6, maxPichkaaris: 2, opacity: 0.6, showAmbient: true } }
+            ],
+            'diwali': [
+                { name: '✨ Grand Deepotsav', cfg: { enableFireworks: true, enableDiyas: true, enableFountains: true, enableSpinners: true, enableLanterns: true, sparklerCursor: true, opacity: 0.95 } },
+                { name: '🎆 Aatishbaji Sky Show', cfg: { enableFireworks: true, enableDiyas: false, enableFountains: false, enableSpinners: false, enableLanterns: true, sparklerCursor: true, opacity: 0.95 } },
+                { name: '🪔 Peaceful Diya Garland', cfg: { enableFireworks: false, enableDiyas: true, enableFountains: false, enableSpinners: false, enableLanterns: true, sparklerCursor: false, opacity: 0.95 } },
+                { name: '🌋 Anar & Chakri Ground Show', cfg: { enableFireworks: false, enableDiyas: true, enableFountains: true, enableSpinners: true, enableLanterns: false, sparklerCursor: true, opacity: 0.95 } }
             ]
         };
 
@@ -905,7 +931,7 @@ start('diwali');</code></pre>
 
             if (activeEvent === 'independence-day') {
                 heroTitle.textContent = 'Independence Day Overlay';
-                heroTitle.classList.remove('holi-theme');
+                heroTitle.classList.remove('holi-theme', 'diwali-theme');
                 heroSubtitle.textContent = 'Patriotic celebration featuring waving Indian flags (Tiranga), flowing tricolor silk waves, flying kites, airshow jets & fireworks.';
 
                 container.innerHTML = `
@@ -984,6 +1010,7 @@ start('diwali');</code></pre>
 
             } else if (activeEvent === 'holi') {
                 heroTitle.textContent = 'Holi Festival Overlay';
+                heroTitle.classList.remove('diwali-theme');
                 heroTitle.classList.add('holi-theme');
                 heroSubtitle.textContent = 'Vibrant celebration featuring bursting water balloons, sweeping pichkaari streams, splash physics & ambient color corners.';
 
@@ -1024,6 +1051,84 @@ start('diwali');</code></pre>
                     <tr><td class="prop-name">opacity</td><td><span class="type-pill">number</span></td><td><span class="val-default">0.95</span></td><td>Overall canvas opacity from 0.0 to 1.0</td></tr>
                     <tr><td class="prop-name">duration</td><td><span class="type-pill">number</span></td><td><span class="val-default">0</span></td><td>Auto-stop timer in ms (0 = runs continuously)</td></tr>
                 `;
+
+            } else if (activeEvent === 'diwali') {
+                heroTitle.textContent = 'Diwali Festival of Lights';
+                heroTitle.classList.remove('holi-theme');
+                heroTitle.classList.add('diwali-theme');
+                heroSubtitle.textContent = 'Radiant celebration featuring grand aerial firework shells, glowing clay diyas, anar fountains, ground chakris & sky lanterns.';
+
+                container.innerHTML = `
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">🎆 Aerial Firework Rockets</span>
+                            <span class="control-val-badge">${configs[activeEvent].enableFireworks ? 'ON' : 'OFF'}</span>
+                        </div>
+                        <input type="range" id="slFireworks" min="0" max="1" step="1" value="${configs[activeEvent].enableFireworks ? 1 : 0}">
+                    </div>
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">🪔 Bottom Clay Diyas</span>
+                            <span class="control-val-badge">${configs[activeEvent].enableDiyas ? 'ON' : 'OFF'}</span>
+                        </div>
+                        <input type="range" id="slDiyas" min="0" max="1" step="1" value="${configs[activeEvent].enableDiyas ? 1 : 0}">
+                    </div>
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">🌋 Anar (Fountain Crackers)</span>
+                            <span class="control-val-badge">${configs[activeEvent].enableFountains ? 'ON' : 'OFF'}</span>
+                        </div>
+                        <input type="range" id="slFountains" min="0" max="1" step="1" value="${configs[activeEvent].enableFountains ? 1 : 0}">
+                    </div>
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">💫 Chakri (Ground Spinners)</span>
+                            <span class="control-val-badge">${configs[activeEvent].enableSpinners ? 'ON' : 'OFF'}</span>
+                        </div>
+                        <input type="range" id="slSpinners" min="0" max="1" step="1" value="${configs[activeEvent].enableSpinners ? 1 : 0}">
+                    </div>
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">🏮 Akash Kandil (Sky Lanterns)</span>
+                            <span class="control-val-badge">${configs[activeEvent].enableLanterns ? 'ON' : 'OFF'}</span>
+                        </div>
+                        <input type="range" id="slLanterns" min="0" max="1" step="1" value="${configs[activeEvent].enableLanterns ? 1 : 0}">
+                    </div>
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">✨ Phuljhadi (Sparkler Cursor)</span>
+                            <span class="control-val-badge">${configs[activeEvent].sparklerCursor ? 'ON' : 'OFF'}</span>
+                        </div>
+                        <input type="range" id="slSparkler" min="0" max="1" step="1" value="${configs[activeEvent].sparklerCursor ? 1 : 0}">
+                    </div>
+                    <div class="control-row">
+                        <div class="control-meta">
+                            <span class="control-name">✨ Overall Canvas Opacity</span>
+                            <span class="control-val-badge">${configs[activeEvent].opacity}</span>
+                        </div>
+                        <input type="range" id="slOpacity" min="0.1" max="1.0" step="0.05" value="${configs[activeEvent].opacity}">
+                    </div>
+                `;
+
+                document.getElementById('slFireworks').addEventListener('input', (e) => { configs[activeEvent].enableFireworks = e.target.value === '1'; startOverlay(); renderUI(); });
+                document.getElementById('slDiyas').addEventListener('input', (e) => { configs[activeEvent].enableDiyas = e.target.value === '1'; startOverlay(); renderUI(); });
+                document.getElementById('slFountains').addEventListener('input', (e) => { configs[activeEvent].enableFountains = e.target.value === '1'; startOverlay(); renderUI(); });
+                document.getElementById('slSpinners').addEventListener('input', (e) => { configs[activeEvent].enableSpinners = e.target.value === '1'; startOverlay(); renderUI(); });
+                document.getElementById('slLanterns').addEventListener('input', (e) => { configs[activeEvent].enableLanterns = e.target.value === '1'; startOverlay(); renderUI(); });
+                document.getElementById('slSparkler').addEventListener('input', (e) => { configs[activeEvent].sparklerCursor = e.target.value === '1'; startOverlay(); renderUI(); });
+                document.getElementById('slOpacity').addEventListener('input', (e) => { configs[activeEvent].opacity = parseFloat(e.target.value); startOverlay(); renderUI(); });
+
+                // Docs Table
+                tableBody.innerHTML = `
+                    <tr><td class="prop-name">enableFireworks</td><td><span class="type-pill">boolean</span></td><td><span class="val-default">true</span></td><td>Enable grand aerial fireworks rockets and spherical bursts</td></tr>
+                    <tr><td class="prop-name">enableDiyas</td><td><span class="type-pill">boolean</span></td><td><span class="val-default">true</span></td><td>Clay oil lamps with natural flickering flame garland across bottom edge</td></tr>
+                    <tr><td class="prop-name">enableFountains</td><td><span class="type-pill">boolean</span></td><td><span class="val-default">true</span></td><td>Anar (flowerpot) conical fountains shooting streams of golden sparks</td></tr>
+                    <tr><td class="prop-name">enableSpinners</td><td><span class="type-pill">boolean</span></td><td><span class="val-default">true</span></td><td>Chakri ground spinners emitting spiral spark vortexes</td></tr>
+                    <tr><td class="prop-name">enableLanterns</td><td><span class="type-pill">boolean</span></td><td><span class="val-default">true</span></td><td>Akash Kandil paper sky lanterns drifting upward with gentle wind sway</td></tr>
+                    <tr><td class="prop-name">sparklerCursor</td><td><span class="type-pill">boolean</span></td><td><span class="val-default">true</span></td><td>Phuljhadi sparkler starbursts trailing pointer / touch movement</td></tr>
+                    <tr><td class="prop-name">opacity</td><td><span class="type-pill">number</span></td><td><span class="val-default">0.95</span></td><td>Overall canvas opacity from 0.0 to 1.0</td></tr>
+                    <tr><td class="prop-name">duration</td><td><span class="type-pill">number</span></td><td><span class="val-default">0</span></td><td>Auto-stop timer in ms (0 = runs continuously)</td></tr>
+                `;
             }
 
             updateCodeSnippets();
@@ -1033,15 +1138,28 @@ start('diwali');</code></pre>
             const activeTab = document.querySelector('.tab-switch.active')?.dataset.lang || 'react';
             const codeBox = document.getElementById('codeSnippet');
 
-            const isIndep = activeEvent === 'independence-day';
-            const pkgName = isIndep ? '@event-overlay/independence-day' : '@event-overlay/holi';
-            const componentName = isIndep ? 'IndependenceDayOverlay' : 'HoliOverlay';
+            let pkgName = '@event-overlay/independence-day';
+            let componentName = 'IndependenceDayOverlay';
+            let reactSnippetProps = 'waveOpacity={0.65} maxFlags={3} maxKites={6}';
+            let esmSnippetProps = 'waveOpacity: 0.65,\n    maxFlags: 3,\n    maxKites: 6';
+
+            if (activeEvent === 'holi') {
+                pkgName = '@event-overlay/holi';
+                componentName = 'HoliOverlay';
+                reactSnippetProps = 'maxBalloons={15} maxPichkaaris={4}';
+                esmSnippetProps = 'maxBalloons: 15,\n    maxPichkaaris: 4';
+            } else if (activeEvent === 'diwali') {
+                pkgName = '@event-overlay/diwali';
+                componentName = 'DiwaliOverlay';
+                reactSnippetProps = 'enableFireworks={true} enableDiyas={true} sparklerCursor={true}';
+                esmSnippetProps = 'enableFireworks: true,\n    enableDiyas: true,\n    sparklerCursor: true';
+            }
 
             let snippet = '';
             if (activeTab === 'react') {
-                snippet = `// 1. Install dedicated package:\n// npm install ${pkgName}\n\nimport { ${componentName} } from '${pkgName}/react';\n\nexport default function App() {\n    return (\n        <main>\n            {/* Only ~12KB bundle size */}\n            <${componentName} ${isIndep ? 'waveOpacity={0.65} maxFlags={3} maxKites={6}' : 'maxBalloons={15}'} />\n            <h1>Welcome to my website!</h1>\n        </main>\n    );\n}`;
+                snippet = `// 1. Install dedicated package:\n// npm install ${pkgName}\n\nimport { ${componentName} } from '${pkgName}/react';\n\nexport default function App() {\n    return (\n        <main>\n            {/* Only ~9-12KB bundle size */}\n            <${componentName} ${reactSnippetProps} />\n            <h1>Welcome to my website!</h1>\n        </main>\n    );\n}`;
             } else if (activeTab === 'esm') {
-                snippet = `import { start, stop } from '${pkgName}';\n\n// Start celebration overlay\nconst overlay = start({\n    opacity: 0.95,\n    ${isIndep ? 'waveOpacity: 0.65,\n    maxFlags: 3,\n    maxKites: 6' : 'maxBalloons: 15,\n    maxPichkaaris: 4'}\n});\n\n// To stop or toggle:\n// stop();\n// overlay.toggle();`;
+                snippet = `import { start, stop } from '${pkgName}';\n\n// Start celebration overlay\nconst overlay = start({\n    opacity: 0.95,\n    ${esmSnippetProps}\n});\n\n// To stop or toggle:\n// stop();\n// overlay.toggle();`;
             } else if (activeTab === 'cdn') {
                 snippet = `<!-- Standalone drop-in CDN script tag (Paste before </body>) -->\n<script \n  src="https://cdn.jsdelivr.net/npm/${pkgName}/dist/index.umd.js" \n  data-autostart>\n<\/script>`;
             } else if (activeTab === 'tsx') {

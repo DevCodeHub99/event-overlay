@@ -1,7 +1,7 @@
 {
   "name": "@event-overlay/core",
-  "version": "1.0.2",
-  "description": "🎆 High-performance celebration overlay engine with tree-shakeable event subpaths for Independence Day, Holi, and custom festive celebrations. Zero dependencies.",
+  "version": "1.0.3",
+  "description": "🎆 High-performance celebration overlay engine with tree-shakeable event subpaths for Independence Day, Holi, Diwali, and custom festive celebrations. Zero dependencies.",
   "main": "dist/event-overlay.cjs",
   "module": "dist/event-overlay.js",
   "types": "dist/event-overlay.d.ts",
@@ -21,9 +21,14 @@
       "import": "./dist/events/holi.js",
       "types": "./dist/events/holi.d.ts"
     },
+    "./diwali": {
+      "import": "./dist/events/diwali.js",
+      "types": "./dist/events/diwali.d.ts"
+    },
     "./umd": "./dist/event-overlay.umd.js",
     "./umd/independence-day": "./dist/events/independence-day.umd.js",
-    "./umd/holi": "./dist/events/holi.umd.js"
+    "./umd/holi": "./dist/events/holi.umd.js",
+    "./umd/diwali": "./dist/events/diwali.umd.js"
   },
   "sideEffects": false,
   "publishConfig": {

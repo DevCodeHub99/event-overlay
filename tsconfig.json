@@ -16,7 +16,8 @@
     "src/**/*",
     "packages/**/*",
     "IndependenceDayOverlay.tsx",
-    "HoliOverlay.tsx"
+    "HoliOverlay.tsx",
+    "DiwaliOverlay.tsx"
   ],
   "exclude": [
     "node_modules",
