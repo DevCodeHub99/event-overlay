@@ -951,6 +951,7 @@ export default IndependenceDayOverlay;
 const pkgIndepJson = {
     name: "@event-overlay/independence-day",
     version: CURRENT_VERSION,
+    type: "module",
     description: "🇮🇳 Lightweight, high-performance Indian Independence Day celebration overlay. Zero dependencies.",
     main: "dist/index.cjs",
     module: "dist/index.js",
@@ -1387,6 +1388,7 @@ export default HoliOverlay;
 const pkgHoliJson = {
     name: "@event-overlay/holi",
     version: CURRENT_VERSION,
+    type: "module",
     description: "🎨 Vibrant, ultra-high-performance Holi festival celebration overlay with water balloons, pichkaari streams, and gulal colors. Zero dependencies.",
     main: "dist/index.cjs",
     module: "dist/index.js",
@@ -1868,6 +1870,7 @@ export default DiwaliOverlay;
 const pkgDiwaliJson = {
     name: "@event-overlay/diwali",
     version: CURRENT_VERSION,
+    type: "module",
     description: "🪔 Dazzling, ultra-high-performance Diwali celebration overlay for React, Next.js, Vue, and Vanilla JS. Grand fireworks, diyas, flowerpot fountains, and sparklers. Zero dependencies.",
     main: "dist/index.cjs",
     module: "dist/index.js",
@@ -2227,6 +2230,7 @@ fs.writeFileSync(path.join(pkgCoreDir, 'dist', 'index.d.ts'), fs.readFileSync(pa
 const pkgCoreJson = {
     name: "@event-overlay/core",
     version: CURRENT_VERSION,
+    type: "module",
     description: "🎆 Headless, high-performance celebration overlay engine with 60 FPS Canvas loop, WCAG 2.2.2 controls, and Page Visibility pausing. Zero dependencies.",
     main: "dist/index.cjs",
     module: "dist/index.js",

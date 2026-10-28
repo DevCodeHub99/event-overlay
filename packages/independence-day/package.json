@@ -1,6 +1,7 @@
 {
   "name": "@event-overlay/independence-day",
   "version": "1.0.5",
+  "type": "module",
   "description": "🇮🇳 Lightweight, high-performance Indian Independence Day celebration overlay. Zero dependencies.",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
