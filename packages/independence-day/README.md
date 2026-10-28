@@ -135,7 +135,7 @@ Add directly before your closing `</body>` tag. Add `data-autostart` to launch i
 
   <!-- 1-line CDN Drop-in -->
   <script 
-    src="https://cdn.jsdelivr.net/npm/@event-overlay/independence-day@1.0.5/dist/index.umd.js" 
+    src="https://cdn.jsdelivr.net/npm/@event-overlay/independence-day@1.0.6/dist/index.umd.js" 
     data-autostart>
   </script>
 </body>
@@ -145,7 +145,7 @@ Add directly before your closing `</body>` tag. Add `data-autostart` to launch i
 Or trigger manually via global `window.IndependenceDayOverlay`:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@event-overlay/independence-day@1.0.5/dist/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@event-overlay/independence-day@1.0.6/dist/index.umd.js"></script>
 <script>
   window.IndependenceDayOverlay.start({
     maxKites: 8,

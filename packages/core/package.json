@@ -1,6 +1,6 @@
 {
   "name": "@event-overlay/core",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "type": "module",
   "description": "🎆 Headless, high-performance celebration overlay engine with 60 FPS Canvas loop, WCAG 2.2.2 controls, and Page Visibility pausing. Zero dependencies.",
   "main": "dist/index.cjs",

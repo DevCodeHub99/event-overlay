@@ -1,9 +1,9 @@
 /**
- * 🎆 @event-overlay/core v1.0.5 — CommonJS
+ * 🎆 @event-overlay/core v1.0.6 — CommonJS
  * @license MIT
  */
 /**
- * 🎆 @event-overlay/core v1.0.5 — Headless Event Overlay Engine
+ * 🎆 @event-overlay/core v1.0.6 — Headless Event Overlay Engine
  * @license MIT
  */
 
@@ -998,7 +998,7 @@ function isRunning() {
 
 
 const EventOverlay = {
-    version: '1.0.5',
+    version: '1.0.6',
     create,
     start,
     stop,

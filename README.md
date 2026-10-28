@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/DevCodeHub99/event-overlay/releases/tag/v1.0.5"><img src="https://img.shields.io/badge/release-v1.0.5-00bfff?style=flat-square" alt="GitHub Release v1.0.5" /></a>
+  <a href="https://github.com/DevCodeHub99/event-overlay/releases/tag/v1.0.6"><img src="https://img.shields.io/badge/release-v1.0.6-00bfff?style=flat-square" alt="GitHub Release v1.0.6" /></a>
   <a href="https://www.npmjs.com/package/@event-overlay/core"><img src="https://img.shields.io/npm/v/@event-overlay/core.svg?style=flat-square&color=38bdf8&label=@event-overlay/core" alt="npm core version" /></a>
   <a href="https://www.npmjs.com/package/@event-overlay/diwali"><img src="https://img.shields.io/npm/v/@event-overlay/diwali.svg?style=flat-square&color=ffd700&label=@event-overlay/diwali" alt="npm diwali version" /></a>
   <a href="https://www.npmjs.com/package/@event-overlay/holi"><img src="https://img.shields.io/npm/v/@event-overlay/holi.svg?style=flat-square&color=ff1493&label=@event-overlay/holi" alt="npm holi version" /></a>
@@ -118,13 +118,13 @@ Add directly before `</body>`:
 
 ```html
 <!-- 🪔 Diwali -->
-<script src="https://cdn.jsdelivr.net/npm/@event-overlay/diwali@1.0.5/dist/index.umd.js" data-autostart></script>
+<script src="https://cdn.jsdelivr.net/npm/@event-overlay/diwali@1.0.6/dist/index.umd.js" data-autostart></script>
 
 <!-- 🎨 Holi -->
-<script src="https://cdn.jsdelivr.net/npm/@event-overlay/holi@1.0.5/dist/index.umd.js" data-autostart></script>
+<script src="https://cdn.jsdelivr.net/npm/@event-overlay/holi@1.0.6/dist/index.umd.js" data-autostart></script>
 
 <!-- 🇮🇳 Independence Day -->
-<script src="https://cdn.jsdelivr.net/npm/@event-overlay/independence-day@1.0.5/dist/index.umd.js" data-autostart></script>
+<script src="https://cdn.jsdelivr.net/npm/@event-overlay/independence-day@1.0.6/dist/index.umd.js" data-autostart></script>
 ```
 
 ---

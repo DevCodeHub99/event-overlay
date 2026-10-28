@@ -1,5 +1,5 @@
 /**
- * 🎆 @event-overlay/core v1.0.5 — Headless Event Overlay Engine
+ * 🎆 @event-overlay/core v1.0.6 — Headless Event Overlay Engine
  * @license MIT
  */
 
@@ -1004,7 +1004,7 @@ export {
 };
 
 const EventOverlay = {
-    version: '1.0.5',
+    version: '1.0.6',
     create,
     start,
     stop,
