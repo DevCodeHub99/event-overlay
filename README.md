@@ -19,6 +19,7 @@
   <img src="https://img.shields.io/badge/WCAG-2.2.2%20%7C%202.3.1%20%7C%202.3.3%20%7C%202.4.7-blueviolet?style=flat-square" alt="WCAG Compliance" />
   <img src="https://img.shields.io/badge/typescript-ready-3178c6?style=flat-square" alt="TypeScript Ready" />
   <img src="https://img.shields.io/badge/license-MIT-ffdf00?style=flat-square" alt="MIT License" />
+  <a href="https://github.com/sponsors/DevCodeHub99"><img src="https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ea4aaa?style=flat-square&logo=githubsponsors" alt="Sponsor" /></a>
 </p>
 
 ---
