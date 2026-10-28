@@ -851,7 +851,10 @@ export default IndependenceDayOverlay;
 `, 'utf-8');
 
 if (tsxIndep) {
-    fs.writeFileSync(path.join(pkgIndepDir, 'IndependenceDayOverlay.tsx'), tsxIndep, 'utf-8');
+    const pkgTsxIndep = tsxIndep
+        .replace(/from '\.\/src\/core\/engine\.js'/g, "from '../../src/core/engine.js'")
+        .replace(/from '\.\/src\/events\/independence-day\.js'/g, "from '../../src/events/independence-day.js'");
+    fs.writeFileSync(path.join(pkgIndepDir, 'IndependenceDayOverlay.tsx'), pkgTsxIndep, 'utf-8');
 }
 fs.writeFileSync(path.join(pkgIndepDir, 'LICENSE'), licenseText, 'utf-8');
 const reactIndepJs = `import { useEffect, useRef } from 'react';
@@ -1299,7 +1302,10 @@ export default HoliOverlay;
 `, 'utf-8');
 
 if (tsxHoli) {
-    fs.writeFileSync(path.join(pkgHoliDir, 'HoliOverlay.tsx'), tsxHoli, 'utf-8');
+    const pkgTsxHoli = tsxHoli
+        .replace(/from '\.\/src\/core\/engine\.js'/g, "from '../../src/core/engine.js'")
+        .replace(/from '\.\/src\/events\/holi\.js'/g, "from '../../src/events/holi.js'");
+    fs.writeFileSync(path.join(pkgHoliDir, 'HoliOverlay.tsx'), pkgTsxHoli, 'utf-8');
 }
 fs.writeFileSync(path.join(pkgHoliDir, 'LICENSE'), licenseText, 'utf-8');
 const reactHoliJs = `import { useEffect, useRef } from 'react';
@@ -1765,7 +1771,10 @@ export default DiwaliOverlay;
 `, 'utf-8');
 
 if (tsxDiwali) {
-    fs.writeFileSync(path.join(pkgDiwaliDir, 'DiwaliOverlay.tsx'), tsxDiwali, 'utf-8');
+    const pkgTsxDiwali = tsxDiwali
+        .replace(/from '\.\/src\/core\/engine\.js'/g, "from '../../src/core/engine.js'")
+        .replace(/from '\.\/src\/events\/diwali\.js'/g, "from '../../src/events/diwali.js'");
+    fs.writeFileSync(path.join(pkgDiwaliDir, 'DiwaliOverlay.tsx'), pkgTsxDiwali, 'utf-8');
 }
 fs.writeFileSync(path.join(pkgDiwaliDir, 'LICENSE'), licenseText, 'utf-8');
 const reactDiwaliJs = `import { useEffect, useRef } from 'react';

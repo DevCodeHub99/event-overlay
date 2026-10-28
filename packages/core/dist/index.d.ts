@@ -61,6 +61,9 @@ export interface IndependenceDayOptions {
     showControls?: boolean;
     controlPosition?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
     persistPreference?: boolean;
+    respectReducedMotion?: boolean;
+    onToggle?: (paused: boolean) => void;
+    onDismiss?: () => void;
 }
 
 export interface HoliOptions {
@@ -71,6 +74,9 @@ export interface HoliOptions {
     showControls?: boolean;
     controlPosition?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
     persistPreference?: boolean;
+    respectReducedMotion?: boolean;
+    onToggle?: (paused: boolean) => void;
+    onDismiss?: () => void;
 }
 
 export interface DiwaliOptions {
@@ -84,6 +90,9 @@ export interface DiwaliOptions {
     showControls?: boolean;
     controlPosition?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
     persistPreference?: boolean;
+    respectReducedMotion?: boolean;
+    onToggle?: (paused: boolean) => void;
+    onDismiss?: () => void;
 }
 
 export declare class EventOverlayEngine {
@@ -94,6 +103,9 @@ export declare class EventOverlayEngine {
     showControls: boolean;
     controlPosition: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
     persistPreference: boolean;
+    respectReducedMotion: boolean;
+    onToggle?: (paused: boolean) => void;
+    onDismiss?: () => void;
     setEvent(event: string | EventModule, eventOptions?: Record<string, any>): EventOverlayEngine;
     start(): EventOverlayEngine;
     stop(): EventOverlayEngine;
@@ -104,6 +116,7 @@ export declare class EventOverlayEngine {
     undismiss(): EventOverlayEngine;
     isRunning(): boolean;
     isPaused(): boolean;
+    isDismissed(): boolean;
     toggle(): EventOverlayEngine;
 }
 
