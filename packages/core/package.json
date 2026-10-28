@@ -1,44 +1,20 @@
 {
   "name": "@event-overlay/core",
   "version": "1.0.5",
-  "description": "🎆 High-performance celebration overlay engine with tree-shakeable event subpaths for Independence Day, Holi, Diwali, and custom festive celebrations. Zero dependencies.",
-  "main": "dist/event-overlay.cjs",
-  "module": "dist/event-overlay.js",
-  "types": "dist/event-overlay.d.ts",
-  "browser": "dist/event-overlay.umd.js",
+  "description": "🎆 Headless, high-performance celebration overlay engine with 60 FPS Canvas loop, WCAG 2.2.2 controls, and Page Visibility pausing. Zero dependencies.",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "browser": "dist/index.umd.js",
   "exports": {
     ".": {
-      "import": "./dist/event-overlay.js",
-      "require": "./dist/event-overlay.cjs",
-      "types": "./dist/event-overlay.d.ts",
-      "default": "./dist/event-overlay.js"
-    },
-    "./independence-day": {
-      "import": "./dist/events/independence-day.js",
-      "types": "./dist/events/independence-day.d.ts"
-    },
-    "./holi": {
-      "import": "./dist/events/holi.js",
-      "types": "./dist/events/holi.d.ts"
-    },
-    "./diwali": {
-      "import": "./dist/events/diwali.js",
-      "types": "./dist/events/diwali.d.ts"
-    },
-    "./umd": "./dist/event-overlay.umd.js",
-    "./umd/independence-day": "./dist/events/independence-day.umd.js",
-    "./umd/holi": "./dist/events/holi.umd.js",
-    "./umd/diwali": "./dist/events/diwali.umd.js"
-  },
-  "sideEffects": false,
-  "peerDependencies": {
-    "react": ">=16.8.0"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
+  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   },
@@ -46,21 +22,12 @@
     "event-overlay",
     "celebration-overlay",
     "festive-overlay",
-    "holi",
-    "holi-overlay",
-    "independence-day",
-    "tiranga",
-    "fireworks",
-    "confetti",
     "canvas-animation",
     "particle-effects",
-    "react-celebration",
-    "react-festive",
+    "headless",
     "zero-dependency",
-    "monorepo",
     "canvas-overlay",
-    "canvas",
-    "react"
+    "canvas"
   ],
   "author": "Vikas",
   "license": "MIT",

@@ -34,7 +34,9 @@ const jsFilesToCheck = [
     'dist/events/holi.umd.js',
     'dist/events/diwali.js',
     'dist/events/diwali.umd.js',
-    'packages/core/dist/event-overlay.js',
+    'packages/core/dist/index.js',
+    'packages/core/dist/index.cjs',
+    'packages/core/dist/index.umd.js',
     'packages/diwali/dist/index.js',
     'packages/diwali/dist/index.cjs',
     'packages/diwali/dist/index.umd.js',
@@ -161,6 +163,14 @@ async function testImports() {
         const indepReact = await import(indepReactUrl);
         assert(typeof indepReact.IndependenceDayOverlay === 'function', '@event-overlay/independence-day/react exports IndependenceDayOverlay component');
 
+        // Test Headless Core Package (@event-overlay/core)
+        const headlessCoreUrl = pathToFileURL(path.join(ROOT_DIR, 'packages/core/dist/index.js')).href;
+        const headlessCore = await import(headlessCoreUrl);
+        assert(typeof headlessCore.create === 'function', '@event-overlay/core exports create()');
+        assert(typeof headlessCore.start === 'function', '@event-overlay/core exports start()');
+        assert(typeof headlessCore.registerEvent === 'function', '@event-overlay/core exports registerEvent()');
+        assert(Boolean(headlessCore.EventOverlayEngine), '@event-overlay/core exports EventOverlayEngine');
+
     } catch (err) {
         assert(false, `Dynamic import failed: ${err.message}\n${err.stack}`);
     }
@@ -173,10 +183,12 @@ console.log('\n--- Step 4: Standalone Package Bundle Sizes ---');
 const diwaliSize = fs.statSync(path.join(ROOT_DIR, 'packages/diwali/dist/index.js')).size;
 const holiSize = fs.statSync(path.join(ROOT_DIR, 'packages/holi/dist/index.js')).size;
 const indepSize = fs.statSync(path.join(ROOT_DIR, 'packages/independence-day/dist/index.js')).size;
+const coreSize = fs.statSync(path.join(ROOT_DIR, 'packages/core/dist/index.js')).size;
 
 assert(diwaliSize > 30000, `@event-overlay/diwali bundle is complete (>30KB, actual: ${diwaliSize} B)`);
 assert(holiSize > 30000, `@event-overlay/holi bundle is complete (>30KB, actual: ${holiSize} B)`);
 assert(indepSize > 30000, `@event-overlay/independence-day bundle is complete (>30KB, actual: ${indepSize} B)`);
+assert(coreSize < 35000, `@event-overlay/core is lightweight headless engine (<35KB, actual: ${coreSize} B)`);
 
 console.log('\n----------------------------------------');
 if (failed) {

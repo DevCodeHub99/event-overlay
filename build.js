@@ -2027,56 +2027,211 @@ MIT © [Vikas](https://github.com/DevCodeHub99)
 
 fs.writeFileSync(path.join(pkgDiwaliDir, 'README.md'), diwaliReadmeContent, 'utf-8');
 
-// C. @event-overlay/core
+// C. @event-overlay/core (Pure Headless Engine, 0 festival bloat)
 const pkgCoreDir = path.join(PACKAGES_DIR, 'core');
 fs.mkdirSync(pkgCoreDir, { recursive: true });
 fs.mkdirSync(path.join(pkgCoreDir, 'dist'), { recursive: true });
-
-// Copy dist into packages/core/dist
-fs.cpSync(DIST_DIR, path.join(pkgCoreDir, 'dist'), { recursive: true });
 fs.writeFileSync(path.join(pkgCoreDir, 'LICENSE'), licenseText, 'utf-8');
+
+const esmCore = `/**
+ * 🎆 @event-overlay/core v${CURRENT_VERSION} — Headless Event Overlay Engine
+ * @license MIT
+ */
+
+${utilsClean}
+
+${engineClean}
+
+let _activeInstance = null;
+
+export function create(options = {}) {
+    return new EventOverlayEngine(options);
+}
+
+export function start(eventName, options = {}) {
+    if (_activeInstance) {
+        _activeInstance.stop();
+    }
+    let opts = options;
+    if (typeof eventName === 'object') {
+        opts = eventName;
+        eventName = opts.event;
+    } else if (typeof eventName === 'string') {
+        opts = Object.assign({}, options, { event: eventName });
+    }
+    _activeInstance = new EventOverlayEngine(opts);
+    _activeInstance.start();
+    return _activeInstance;
+}
+
+export function stop() {
+    if (_activeInstance) {
+        _activeInstance.stop();
+        _activeInstance = null;
+    }
+}
+
+export function pause() {
+    if (_activeInstance) {
+        _activeInstance.pause();
+    }
+}
+
+export function resume() {
+    if (_activeInstance) {
+        _activeInstance.resume();
+    }
+}
+
+export function togglePause() {
+    if (_activeInstance) {
+        _activeInstance.togglePause();
+    }
+}
+
+export function isPaused() {
+    return _activeInstance ? _activeInstance.isPaused() : false;
+}
+
+export function dismiss() {
+    if (_activeInstance) {
+        _activeInstance.dismiss();
+    }
+}
+
+export function undismiss() {
+    if (_activeInstance) {
+        _activeInstance.undismiss();
+    }
+}
+
+export function toggle(eventName, options = {}) {
+    if (_activeInstance && _activeInstance.isRunning()) {
+        stop();
+    } else {
+        start(eventName, options);
+    }
+}
+
+export function isRunning() {
+    return _activeInstance ? _activeInstance.isRunning() : false;
+}
+
+export {
+    EventOverlayEngine,
+    registerEvent,
+    getRegisteredEvent,
+    getRegisteredEventIds,
+    filterInPlace,
+    randomRange,
+    getSafeDPR,
+    prefersReducedMotion
+};
+
+const EventOverlay = {
+    version: '${CURRENT_VERSION}',
+    create,
+    start,
+    stop,
+    pause,
+    resume,
+    togglePause,
+    isPaused,
+    dismiss,
+    undismiss,
+    toggle,
+    isRunning,
+    EventOverlayEngine,
+    registerEvent,
+    getRegisteredEvent,
+    getRegisteredEventIds
+};
+
+export default EventOverlay;
+`;
+
+const cjsCore = `/**
+ * 🎆 @event-overlay/core v${CURRENT_VERSION} — CommonJS
+ * @license MIT
+ */
+${esmCore
+    .replace(/^export\s+default\s+\w+;\s*$/gm, '')
+    .replace(/^export\s+const\s+/gm, 'const ')
+    .replace(/^export\s+let\s+/gm, 'let ')
+    .replace(/^export\s+function\s+/gm, 'function ')
+    .replace(/^export\s+class\s+/gm, 'class ')
+    .replace(/^export\s+\{[\s\S]*?\};\s*$/gm, '')
+    .trim()}
+
+module.exports = EventOverlay;
+module.exports.default = EventOverlay;
+module.exports.EventOverlay = EventOverlay;
+module.exports.EventOverlayEngine = EventOverlayEngine;
+module.exports.registerEvent = registerEvent;
+module.exports.getRegisteredEvent = getRegisteredEvent;
+module.exports.getRegisteredEventIds = getRegisteredEventIds;
+module.exports.create = create;
+module.exports.start = start;
+module.exports.stop = stop;
+module.exports.pause = pause;
+module.exports.resume = resume;
+module.exports.togglePause = togglePause;
+module.exports.isPaused = isPaused;
+module.exports.dismiss = dismiss;
+module.exports.undismiss = undismiss;
+module.exports.toggle = toggle;
+module.exports.isRunning = isRunning;
+`;
+
+const umdCore = `/**
+ * 🎆 @event-overlay/core v${CURRENT_VERSION} — UMD
+ * @license MIT
+ */
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define([], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory();
+    } else {
+        root.EventOverlayCore = factory();
+    }
+}(typeof self !== 'undefined' ? self : this, function () {
+    'use strict';
+${esmCore
+    .replace(/^export\s+default\s+\w+;\s*$/gm, '')
+    .replace(/^export\s+const\s+/gm, 'const ')
+    .replace(/^export\s+let\s+/gm, 'let ')
+    .replace(/^export\s+function\s+/gm, 'function ')
+    .replace(/^export\s+class\s+/gm, 'class ')
+    .replace(/^export\s+\{[\s\S]*?\};\s*$/gm, '')
+    .trim()}
+    return EventOverlay;
+}));
+`;
+
+fs.writeFileSync(path.join(pkgCoreDir, 'dist', 'index.js'), esmCore, 'utf-8');
+fs.writeFileSync(path.join(pkgCoreDir, 'dist', 'index.min.js'), minify(esmCore), 'utf-8');
+fs.writeFileSync(path.join(pkgCoreDir, 'dist', 'index.cjs'), cjsCore, 'utf-8');
+fs.writeFileSync(path.join(pkgCoreDir, 'dist', 'index.umd.js'), umdCore, 'utf-8');
+fs.writeFileSync(path.join(pkgCoreDir, 'dist', 'index.d.ts'), fs.readFileSync(path.join(SRC_DIR, 'core', 'types.d.ts'), 'utf-8'), 'utf-8');
 
 const pkgCoreJson = {
     name: "@event-overlay/core",
     version: CURRENT_VERSION,
-    description: "🎆 High-performance celebration overlay engine with tree-shakeable event subpaths for Independence Day, Holi, Diwali, and custom festive celebrations. Zero dependencies.",
-    main: "dist/event-overlay.cjs",
-    module: "dist/event-overlay.js",
-    types: "dist/event-overlay.d.ts",
-    browser: "dist/event-overlay.umd.js",
+    description: "🎆 Headless, high-performance celebration overlay engine with 60 FPS Canvas loop, WCAG 2.2.2 controls, and Page Visibility pausing. Zero dependencies.",
+    main: "dist/index.cjs",
+    module: "dist/index.js",
+    types: "dist/index.d.ts",
+    browser: "dist/index.umd.js",
     exports: {
         ".": {
-            import: "./dist/event-overlay.js",
-            require: "./dist/event-overlay.cjs",
-            types: "./dist/event-overlay.d.ts",
-            default: "./dist/event-overlay.js"
-        },
-        "./independence-day": {
-            import: "./dist/events/independence-day.js",
-            types: "./dist/events/independence-day.d.ts"
-        },
-        "./holi": {
-            import: "./dist/events/holi.js",
-            types: "./dist/events/holi.d.ts"
-        },
-        "./diwali": {
-            import: "./dist/events/diwali.js",
-            types: "./dist/events/diwali.d.ts"
-        },
-        "./umd": "./dist/event-overlay.umd.js",
-        "./umd/independence-day": "./dist/events/independence-day.umd.js",
-        "./umd/holi": "./dist/events/holi.umd.js",
-        "./umd/diwali": "./dist/events/diwali.umd.js"
-    },
-    sideEffects: false,
-        peerDependencies: {
-        react: ">=16.8.0"
-    },
-    peerDependenciesMeta: {
-        react: {
-            optional: true
+            import: "./dist/index.js",
+            require: "./dist/index.cjs",
+            types: "./dist/index.d.ts",
+            default: "./dist/index.js"
         }
     },
+    sideEffects: false,
     publishConfig: {
         access: "public"
     },
@@ -2084,21 +2239,12 @@ const pkgCoreJson = {
         "event-overlay",
         "celebration-overlay",
         "festive-overlay",
-        "holi",
-        "holi-overlay",
-        "independence-day",
-        "tiranga",
-        "fireworks",
-        "confetti",
         "canvas-animation",
         "particle-effects",
-        "react-celebration",
-        "react-festive",
+        "headless",
         "zero-dependency",
-        "monorepo",
         "canvas-overlay",
-        "canvas",
-        "react"
+        "canvas"
     ],
     author: "Vikas",
     license: "MIT",
@@ -2117,15 +2263,13 @@ const coreReadmeContent = `<p align="center">
 <h1 align="center">@event-overlay/core</h1>
 
 <p align="center">
-  <strong>The high-performance, modular celebration overlay framework for web applications. Zero dependencies, 60 FPS Canvas 2D engine, and tree-shakeable festival modules.</strong>
+  <strong>Lightweight, headless celebration overlay engine with 60 FPS Canvas loop, WCAG 2.2.2 controls, and Page Visibility pausing. Zero external dependencies.</strong>
 </p>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@event-overlay/core"><img src="https://img.shields.io/npm/v/@event-overlay/core.svg?style=flat-square&color=38bdf8" alt="npm version" /></a>
-  <a href="https://www.npmjs.com/package/@event-overlay/core"><img src="https://img.shields.io/npm/dm/@event-overlay/core.svg?style=flat-square&color=32cd32" alt="npm downloads" /></a>
-  <img src="https://img.shields.io/badge/bundle%20size-~12KB%20gzipped-00bfff?style=flat-square" alt="Bundle Size" />
+  <img src="https://img.shields.io/badge/bundle%20size-~3KB%20gzipped-00bfff?style=flat-square" alt="Bundle Size" />
   <img src="https://img.shields.io/badge/dependencies-0-brightgreen?style=flat-square" alt="Zero Dependencies" />
-  <img src="https://img.shields.io/badge/framework-agnostic-9400d3?style=flat-square" alt="Framework Agnostic" />
   <img src="https://img.shields.io/badge/typescript-ready-3178c6?style=flat-square" alt="TypeScript" />
   <img src="https://img.shields.io/badge/license-MIT-ffdf00?style=flat-square" alt="MIT License" />
 </p>
@@ -2134,130 +2278,65 @@ const coreReadmeContent = `<p align="center">
 
 ## 🌟 Overview
 
-\`@event-overlay/core\` is an extensible celebration overlay engine built for high-performance festive visual effects in web apps. Whether you need Indian Independence Day celebrations, Holi festival color splashes, Diwali fireworks, New Year confetti, or custom interactive animations, the core engine manages the particle physics, responsive canvas scaling, frame scheduling, and non-blocking teardown seamlessly.
+\`@event-overlay/core\` is the pure, headless foundation powering the event-overlay suite. It contains **zero festival-specific graphics** (~3 KB gzipped) and handles all the complex infrastructure:
+
+- **60 FPS Physics Loop**: High-DPI retina canvas scaling with sub-pixel rendering.
+- **WCAG 2.2.2 User Choice**: Floating glassmorphic controls (\`[ ⏸ Pause | ✕ ]\`), launcher badge restore, and <kbd>Esc</kbd> shortcut.
+- **Tab Visibility Pausing**: Automatically suspends loops when the user switches tabs (0% CPU/battery).
+- **Custom Event Registry**: Define and launch any custom visual celebration.
 
 ---
 
 ## 📦 Installation
 
 \`\`\`bash
-# npm
 npm install @event-overlay/core
-
-# yarn
-yarn add @event-overlay/core
-
-# pnpm
-pnpm add @event-overlay/core
-
-# bun
-bun add @event-overlay/core
 \`\`\`
 
 ---
 
-## 🚀 Tree-Shakeable Subpaths
-
-Import only what you need to keep your bundle minimal:
-
-| Subpath | Description |
-| :--- | :--- |
-| \`@event-overlay/core\` | Unified engine with built-in Independence Day & Holi events |
-| \`@event-overlay/core/independence-day\` | Standalone Indian Independence Day celebration event |
-| \`@event-overlay/core/holi\` | Standalone Holi festival water balloon & pichkaari event |
-| \`@event-overlay/core/react\` | React component wrappers for all celebration events |
-
----
-
-## 💻 Quick Usage
-
-### React & Next.js
-
-\`\`\`tsx
-import { EventOverlay, IndependenceDayOverlay, HoliOverlay } from '@event-overlay/core/react';
-
-export default function App() {
-  return (
-    <main>
-      {/* Run any event via EventOverlay */}
-      <EventOverlay event="independence-day" maxKites={6} maxFlags={3} />
-
-      {/* Or use the dedicated component */}
-      {/* <HoliOverlay maxBalloons={15} maxPichkaaris={4} /> */}
-
-      <h1>Welcome to the Celebration! 🎆</h1>
-    </main>
-  );
-}
-\`\`\`
-
-### Vanilla JavaScript
+## 🚀 Building a Custom Celebration Event
 
 \`\`\`javascript
-import { start, stop, toggle, isRunning } from '@event-overlay/core';
+import { registerEvent, start } from '@event-overlay/core';
 
-// Start Independence Day overlay
-start({
-  event: 'independence-day',
-  maxKites: 6,
-  maxFlags: 3,
-  waveOpacity: 0.65
-});
-
-// Or start Holi overlay
-// start({
-//   event: 'holi',
-//   maxBalloons: 15,
-//   maxPichkaaris: 4
-// });
-\`\`\`
-
----
-
-## 🧩 Building Custom Events
-
-You can easily register and plug your own custom celebration particle engines into the core runtime:
-
-\`\`\`typescript
-import { registerEvent, start, EventModule } from '@event-overlay/core';
-
-const ConfettiEvent: EventModule = {
-  name: 'new-year-confetti',
-  init(canvas, ctx, options) {
-    // Initialize particle arrays and state
+// 1. Define your custom event module
+const GoldenStarsEvent = {
+  id: 'golden-stars',
+  name: 'Golden Stars Celebration',
+  init(ctx, width, height, options) {
+    this.stars = Array.from({ length: 40 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 3 + 1,
+      speed: Math.random() * 1.5 + 0.5
+    }));
   },
-  render(canvas, ctx, delta, options) {
-    // Draw 60fps frame on Canvas 2D
+  update(time, delta, width, height) {
+    this.stars.forEach(star => {
+      star.y += star.speed;
+      if (star.y > height) star.y = 0;
+    });
+  },
+  draw(ctx, width, height, time) {
+    ctx.fillStyle = '#FFD700';
+    this.stars.forEach(star => {
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
   },
   destroy() {
-    // Cleanup particle memory
+    this.stars = [];
   }
 };
 
-// Register custom event
-registerEvent(ConfettiEvent);
+// 2. Register the module
+registerEvent(GoldenStarsEvent);
 
-// Launch it!
-start({ event: 'new-year-confetti' });
+// 3. Start the celebration with full controls and visibility pausing!
+start('golden-stars');
 \`\`\`
-
----
-
-## ⚙️ Core Engine Configuration
-
-| Option | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| \`event\` | \`'independence-day' \\| 'holi' \\| string\` | \`'independence-day'\` | Name of registered event to trigger. |
-| \`opacity\` | \`number\` | \`0.95\` | Master canvas opacity (\`0.0\` to \`1.0\`). |
-| \`zIndex\` | \`number\` | \`99999\` | CSS z-index applied to fixed canvas. |
-| \`duration\` | \`number\` | \`0\` | Auto-stop timer in milliseconds (\`0\` = continuous). |
-| \`container\` | \`string\` | \`'body'\` | Target selector or DOM container where canvas attaches. |
-
----
-
-## 🔍 Keywords & Discovery
-
-\`event-overlay\` • \`celebration-overlay\` • \`festive-overlay\` • \`canvas-animation\` • \`particle-effects\` • \`react-celebration\` • \`react-festive\` • \`independence-day\` • \`holi-overlay\` • \`holi-festival\` • \`fireworks\` • \`confetti\` • \`canvas-overlay\` • \`nextjs-animation\` • \`zero-dependency\` • \`web-animation\`
 
 ---
 
