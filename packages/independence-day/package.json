@@ -1,6 +1,6 @@
 {
   "name": "@event-overlay/independence-day",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "🇮🇳 Lightweight, high-performance Indian Independence Day celebration overlay. Zero dependencies.",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -14,12 +14,21 @@
       "default": "./dist/index.js"
     },
     "./react": {
-      "import": "./IndependenceDayOverlay.tsx",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/react.js",
+      "types": "./dist/react.d.ts",
+      "default": "./dist/react.js"
     },
     "./umd": "./dist/index.umd.js"
   },
   "sideEffects": false,
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
   "publishConfig": {
     "access": "public"
   },

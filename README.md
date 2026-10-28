@@ -48,6 +48,8 @@ Install the exact package tailored to your celebration:
 - ⚡ **Buttery 60 FPS Performance**: Powered by an internal physics loop with velocity damping, realistic drag, and sub-pixel rendering.
 - 🪶 **Zero External Dependencies**: Self-contained lightweight Canvas 2D engine with zero bloat.
 - 🛡️ **Non-Intrusive & Accessible**: Layered with `pointer-events: none` and `aria-hidden="true"` so links, buttons, inputs, and screen readers continue working with zero friction.
+- ⏸️ **User Choice & WCAG 2.2.2 Compliant**: Built-in floating pause/resume and dismiss controls, `Escape` key shortcut, and session preference persistence so festive animations never force themselves over important content.
+- 🔋 **Smart Visibility-Based Pausing**: Uses the Page Visibility API to automatically suspend animation rendering in background/inactive tabs, preserving CPU, memory, and battery.
 - 🧩 **Universal Framework Compatibility**: Out-of-the-box support for **React**, **Next.js (App & Pages Router)**, **Vue**, **Svelte**, **Angular**, **Vite**, and plain **HTML CDN script tags**.
 - 🛠️ **Deeply Customizable**: Configure particle counts, speed, colors, z-index, duration, and opacity with full TypeScript intellisense.
 - 📱 **Retina & High-DPI Ready**: Automatically adjusts canvas scaling to match device pixel ratios for razor-sharp visual fidelity.

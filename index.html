@@ -884,7 +884,7 @@
             <div class="nav-brand">
                 <span class="brand-icon">🎆</span>
                 <span class="brand-title">event-overlay</span>
-                <span class="brand-version">v1.0.4</span>
+                <span class="brand-version">v1.0.5</span>
             </div>
             <div class="nav-links">
                 <a href="https://github.com/DevCodeHub99/event-overlay" target="_blank" rel="noopener noreferrer" class="nav-gh-link">
@@ -1095,7 +1095,23 @@ start('diwali');</code></pre>
             ]
         };
 
+        function updateToggleBtn(isPaused) {
+            const btn = document.getElementById('btnToggle');
+            if (!btn) return;
+            if (isPaused) {
+                btn.textContent = 'Resume Overlay';
+                btn.classList.replace('btn-brand', 'btn-outline');
+            } else {
+                btn.textContent = 'Pause Overlay';
+                btn.classList.replace('btn-outline', 'btn-brand');
+            }
+        }
+
         function startOverlay() {
+            try {
+                sessionStorage.removeItem('event_overlay_dismissed');
+                sessionStorage.removeItem('event_overlay_paused');
+            } catch (e) {}
             if (currentEngine) {
                 currentEngine.stop();
             }
@@ -1103,9 +1119,12 @@ start('diwali');</code></pre>
             currentEngine = EventOverlay.create({
                 event: activeEvent,
                 opacity: c.opacity,
-                eventOptions: c
+                eventOptions: c,
+                onToggle: (isPaused) => updateToggleBtn(isPaused),
+                onDismiss: () => updateToggleBtn(true)
             });
             currentEngine.start();
+            updateToggleBtn(false);
         }
 
         // Interactive Click / Tap Burst
@@ -1414,21 +1433,12 @@ start('diwali');</code></pre>
         // Pause/Resume button
         const btnToggle = document.getElementById('btnToggle');
         btnToggle.addEventListener('click', () => {
-            if (currentEngine.isRunning()) {
-                currentEngine.stop();
-                btnToggle.textContent = 'Resume Overlay';
-                btnToggle.classList.replace('btn-brand', 'btn-outline');
-            } else {
-                currentEngine.start();
-                btnToggle.textContent = 'Pause Overlay';
-                btnToggle.classList.replace('btn-outline', 'btn-brand');
-            }
+            if (!currentEngine) return;
+            currentEngine.togglePause();
         });
 
         document.getElementById('btnRestart').addEventListener('click', () => {
             startOverlay();
-            btnToggle.textContent = 'Pause Overlay';
-            btnToggle.classList.replace('btn-outline', 'btn-brand');
         });
 
         // Initial setup

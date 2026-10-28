@@ -1,6 +1,6 @@
 {
   "name": "@event-overlay/diwali",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "🪔 Dazzling, ultra-high-performance Diwali celebration overlay for React, Next.js, Vue, and Vanilla JS. Grand fireworks, diyas, flowerpot fountains, and sparklers. Zero dependencies.",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -14,12 +14,21 @@
       "default": "./dist/index.js"
     },
     "./react": {
-      "import": "./DiwaliOverlay.tsx",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/react.js",
+      "types": "./dist/react.d.ts",
+      "default": "./dist/react.js"
     },
     "./umd": "./dist/index.umd.js"
   },
   "sideEffects": false,
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
   "publishConfig": {
     "access": "public"
   },

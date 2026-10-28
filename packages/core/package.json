@@ -1,6 +1,6 @@
 {
   "name": "@event-overlay/core",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "🎆 High-performance celebration overlay engine with tree-shakeable event subpaths for Independence Day, Holi, Diwali, and custom festive celebrations. Zero dependencies.",
   "main": "dist/event-overlay.cjs",
   "module": "dist/event-overlay.js",
@@ -31,6 +31,14 @@
     "./umd/diwali": "./dist/events/diwali.umd.js"
   },
   "sideEffects": false,
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
   "publishConfig": {
     "access": "public"
   },

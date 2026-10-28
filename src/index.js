@@ -2,7 +2,7 @@
  * 🎆 Event Overlay — Framework-agnostic pluggable event overlay engine
  *
  * @module event-overlay
- * @version 1.0.0
+ * @version 1.0.5
  * @license MIT
  */
 
@@ -59,6 +59,56 @@ export function stop() {
 }
 
 /**
+ * Pause the current active event overlay.
+ */
+export function pause() {
+    if (_activeInstance) {
+        _activeInstance.pause();
+    }
+}
+
+/**
+ * Resume the current active event overlay.
+ */
+export function resume() {
+    if (_activeInstance) {
+        _activeInstance.resume();
+    }
+}
+
+/**
+ * Toggle pause state of the current active event overlay.
+ */
+export function togglePause() {
+    if (_activeInstance) {
+        _activeInstance.togglePause();
+    }
+}
+
+/**
+ * Check if the active overlay is paused.
+ * @returns {boolean}
+ */
+export function isPaused() {
+    return _activeInstance ? _activeInstance.isPaused() : false;
+}
+
+/**
+ * Dismiss the current active event overlay for the session.
+ */
+export function dismiss() {
+    if (_activeInstance) {
+        _activeInstance.dismiss();
+    }
+}
+
+export function undismiss() {
+    if (_activeInstance) {
+        _activeInstance.undismiss();
+    }
+}
+
+/**
  * Toggle the current active event overlay on/off.
  * @param {string|Object} [eventName='independence-day']
  * @param {Object} [options]
@@ -99,9 +149,15 @@ export {
 };
 
 const EventOverlay = {
-    version: '1.0.0',
+    version: '1.0.5',
     start,
     stop,
+    pause,
+    resume,
+    togglePause,
+    isPaused,
+    dismiss,
+    undismiss,
     toggle,
     isRunning,
     create,

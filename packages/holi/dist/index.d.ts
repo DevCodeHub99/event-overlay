@@ -23,6 +23,11 @@ export interface HoliOverlayProps extends HoliOptions {
 
 export declare function start(options?: HoliOptions): any;
 export declare function stop(): void;
+export declare function pause(): void;
+export declare function resume(): void;
+export declare function togglePause(): void;
+export declare function isPaused(): boolean;
+export declare function dismiss(): void;
 export declare function toggle(options?: HoliOptions): void;
 export declare function isRunning(): boolean;
 

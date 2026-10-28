@@ -2,7 +2,9 @@
  * Standalone Tree-Shakeable React Component for Independence Day Overlay
  *
  * Usage:
- *   import { IndependenceDayOverlay } from '@devcodehub99/event-overlay/react/independence-day';
+ *   import { IndependenceDayOverlay } from '@event-overlay/core/react/independence-day';
+ *   // or from dedicated package:
+ *   import { IndependenceDayOverlay } from '@event-overlay/independence-day/react';
  *   <IndependenceDayOverlay maxFlags={4} maxKites={10} maxJets={3} />
  */
 import { useEffect, useRef } from 'react';
@@ -20,8 +22,15 @@ export function IndependenceDayOverlay({
     maxFireworks = 3,
     maxPetals = 35,
     showGlow = true,
+    showWave = true,
+    waveOpacity = 0.65,
     duration = 0,
     container,
+    showControls = true,
+    controlPosition = 'bottom-right',
+    persistPreference = true,
+    onToggle,
+    onDismiss,
     active = true
 }) {
     const engineRef = useRef(null);
@@ -35,13 +44,20 @@ export function IndependenceDayOverlay({
             opacity,
             duration,
             container,
+            showControls,
+            controlPosition,
+            persistPreference,
+            onToggle,
+            onDismiss,
             eventOptions: {
                 maxFlags,
                 maxKites,
                 maxJets,
                 maxFireworks,
                 maxPetals,
-                showGlow
+                showGlow,
+                showWave,
+                waveOpacity
             }
         });
         engineRef.current.start();
@@ -52,7 +68,24 @@ export function IndependenceDayOverlay({
                 engineRef.current = null;
             }
         };
-    }, [active, zIndex, opacity, maxFlags, maxKites, maxJets, maxFireworks, maxPetals, showGlow, duration, container]);
+    }, [
+        active,
+        zIndex,
+        opacity,
+        maxFlags,
+        maxKites,
+        maxJets,
+        maxFireworks,
+        maxPetals,
+        showGlow,
+        showWave,
+        waveOpacity,
+        duration,
+        container,
+        showControls,
+        controlPosition,
+        persistPreference
+    ]);
 
     return null;
 }

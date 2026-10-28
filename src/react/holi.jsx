@@ -2,7 +2,9 @@
  * Standalone Tree-Shakeable React Component for Holi Festival Overlay
  *
  * Usage:
- *   import { HoliOverlay } from '@devcodehub99/event-overlay/react/holi';
+ *   import { HoliOverlay } from '@event-overlay/core/react/holi';
+ *   // or from dedicated package:
+ *   import { HoliOverlay } from '@event-overlay/holi/react';
  *   <HoliOverlay maxBalloons={20} />
  */
 import { useEffect, useRef } from 'react';
@@ -19,6 +21,11 @@ export function HoliOverlay({
     colors,
     duration = 0,
     container,
+    showControls = true,
+    controlPosition = 'bottom-right',
+    persistPreference = true,
+    onToggle,
+    onDismiss,
     active = true
 }) {
     const engineRef = useRef(null);
@@ -32,6 +39,11 @@ export function HoliOverlay({
             opacity,
             duration,
             container,
+            showControls,
+            controlPosition,
+            persistPreference,
+            onToggle,
+            onDismiss,
             eventOptions: {
                 maxBalloons,
                 maxPichkaaris,
@@ -46,7 +58,19 @@ export function HoliOverlay({
                 engineRef.current = null;
             }
         };
-    }, [active, zIndex, opacity, maxBalloons, maxPichkaaris, colors, duration, container]);
+    }, [
+        active,
+        zIndex,
+        opacity,
+        maxBalloons,
+        maxPichkaaris,
+        colors,
+        duration,
+        container,
+        showControls,
+        controlPosition,
+        persistPreference
+    ]);
 
     return null;
 }

@@ -2,9 +2,10 @@
  * Multi-Event React wrapper for Event Overlay
  *
  * Usage:
- *   import { EventOverlayReact } from '@devcodehub99/event-overlay/react';
+ *   import { EventOverlayReact } from '@event-overlay/core/react';
  *   <EventOverlayReact event="independence-day" />
  *   <EventOverlayReact event="holi" />
+ *   <EventOverlayReact event="diwali" />
  */
 import { useEffect, useRef } from 'react';
 import EventOverlay from '../index.js';
@@ -15,6 +16,11 @@ export function EventOverlayReact({
     opacity = 0.95,
     duration = 0,
     container,
+    showControls = true,
+    controlPosition = 'bottom-right',
+    persistPreference = true,
+    onToggle,
+    onDismiss,
     eventOptions = {},
     active = true
 }) {
@@ -29,6 +35,11 @@ export function EventOverlayReact({
             opacity,
             duration,
             container,
+            showControls,
+            controlPosition,
+            persistPreference,
+            onToggle,
+            onDismiss,
             eventOptions
         });
         engineRef.current.start();
@@ -39,7 +50,18 @@ export function EventOverlayReact({
                 engineRef.current = null;
             }
         };
-    }, [active, event, zIndex, opacity, duration, container, JSON.stringify(eventOptions)]);
+    }, [
+        active,
+        event,
+        zIndex,
+        opacity,
+        duration,
+        container,
+        showControls,
+        controlPosition,
+        persistPreference,
+        JSON.stringify(eventOptions)
+    ]);
 
     return null;
 }

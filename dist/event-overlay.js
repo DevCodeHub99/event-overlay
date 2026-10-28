@@ -61,7 +61,7 @@ function prefersReducedMotion() {
  * Framework-agnostic, zero-dependency HTML5 Canvas engine for plug-and-play event animations.
  *
  * @module event-overlay/engine
- * @version 1.0.0
+ * @version 1.0.5
  * @license MIT
  */
 
@@ -119,6 +119,11 @@ class EventOverlayEngine {
      * @param {string} [options.container] - CSS selector for parent element (default: body)
      * @param {number} [options.duration=0] - Auto-stop duration in ms (0 = infinite)
      * @param {boolean} [options.respectReducedMotion=true] - Scale down motion if OS requested
+     * @param {boolean} [options.showControls=true] - Display floating pause/resume control button
+     * @param {string} [options.controlPosition='bottom-right'] - Position of controls ('bottom-right'|'bottom-left'|'top-right'|'top-left')
+     * @param {boolean} [options.persistPreference=true] - Remember user pause/dismiss choice for current session
+     * @param {Function} [options.onToggle] - Callback (paused: boolean) => void
+     * @param {Function} [options.onDismiss] - Callback () => void
      * @param {Object} [options.eventOptions] - Custom options passed down to the event module
      */
     constructor(options = {}) {
@@ -129,6 +134,11 @@ class EventOverlayEngine {
         this.containerSelector = options.container || null;
         this.duration = options.duration ?? 0;
         this.respectReducedMotion = options.respectReducedMotion ?? true;
+        this.showControls = options.showControls ?? true;
+        this.controlPosition = options.controlPosition || 'bottom-right';
+        this.persistPreference = options.persistPreference ?? true;
+        this.onToggle = typeof options.onToggle === 'function' ? options.onToggle : null;
+        this.onDismiss = typeof options.onDismiss === 'function' ? options.onDismiss : null;
         this.eventOptions = options.eventOptions || {};
 
         this._canvas = null;
@@ -137,12 +147,19 @@ class EventOverlayEngine {
         this._animationId = null;
         this._running = false;
         this._paused = false;
+        this._tabHidden = false;
+        this._dismissed = false;
         this._startTime = 0;
         this._lastTime = 0;
         this._firstFrame = true;
         this._resizeHandler = null;
         this._resizeTimer = null;
         this._visibilityHandler = null;
+        this._keyHandler = null;
+        this._controlsEl = null;
+        this._toggleBtn = null;
+        this._controlDot = null;
+        this._controlLabel = null;
         this._activeModule = null;
 
         this._width = 0;
@@ -150,13 +167,18 @@ class EventOverlayEngine {
     }
 
     _getContainer() {
-        if (this.containerSelector) {
+        if (this.containerSelector && typeof document !== 'undefined') {
             return document.querySelector(this.containerSelector) || document.body;
         }
-        return document.body;
+        return typeof document !== 'undefined' ? document.body : null;
     }
 
     _createCanvas() {
+        if (typeof document === 'undefined') return;
+
+        const container = this._getContainer();
+        if (!container) return;
+
         const canvas = document.createElement('canvas');
         canvas.id = `event-overlay-canvas-${this._id}`;
         canvas.setAttribute('aria-hidden', 'true');
@@ -168,25 +190,249 @@ class EventOverlayEngine {
             'height:100%',
             'pointer-events:none',
             `z-index:${this.zIndex}`,
-            `opacity:${this.opacity}`
+            `opacity:${this._paused ? 0 : this.opacity}`,
+            'transition:opacity 0.25s ease'
         ].join(';');
 
-        this._getContainer().appendChild(canvas);
+        container.appendChild(canvas);
         this._canvas = canvas;
         this._ctx = canvas.getContext('2d');
     }
 
+    _getEventIcon() {
+        if (this.eventId === 'diwali') return '🪔';
+        if (this.eventId === 'holi') return '🎨';
+        if (this.eventId === 'independence-day') return '🇮🇳';
+        return '🎆';
+    }
+
+    _createControls() {
+        if (!this.showControls || typeof document === 'undefined') return;
+        if (this._controlsEl) return;
+
+        const container = document.createElement('div');
+        container.id = `event-overlay-controls-${this._id}`;
+        container.setAttribute('role', 'region');
+        container.setAttribute('aria-label', 'Celebration overlay controls');
+
+        const posStyles = {
+            'bottom-right': 'bottom:20px;right:20px;',
+            'bottom-left': 'bottom:20px;left:20px;',
+            'top-right': 'top:20px;right:20px;',
+            'top-left': 'top:20px;left:20px;'
+        };
+        const posStyle = posStyles[this.controlPosition] || posStyles['bottom-right'];
+
+        container.style.cssText = [
+            'position:fixed',
+            posStyle,
+            `z-index:${this.zIndex + 1}`,
+            'display:inline-flex',
+            'align-items:center',
+            'pointer-events:auto',
+            'user-select:none',
+            'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif'
+        ].join(';');
+
+        document.body.appendChild(container);
+        this._controlsEl = container;
+
+        this._renderControlsContent();
+
+        // Keyboard listener: Escape to toggle pause/resume or un-dismiss
+        this._keyHandler = (e) => {
+            if (e.key === 'Escape' || e.keyCode === 27) {
+                this.togglePause();
+            }
+        };
+        window.addEventListener('keydown', this._keyHandler);
+    }
+
+    _renderControlsContent() {
+        if (!this._controlsEl) return;
+        const container = this._controlsEl;
+        container.innerHTML = '';
+
+        if (this._dismissed) {
+            // Minimized circular launcher button
+            const launcher = document.createElement('button');
+            launcher.type = 'button';
+            launcher.setAttribute('aria-label', 'Show celebration overlay (Press Esc)');
+            launcher.title = 'Show celebration overlay (Press Esc)';
+            launcher.style.cssText = [
+                'width:38px',
+                'height:38px',
+                'border-radius:50%',
+                'background:rgba(15,23,42,0.85)',
+                'backdrop-filter:blur(10px)',
+                '-webkit-backdrop-filter:blur(10px)',
+                'border:1px solid rgba(255,255,255,0.22)',
+                'box-shadow:0 4px 18px rgba(0,0,0,0.35)',
+                'display:inline-flex',
+                'align-items:center',
+                'justify-content:center',
+                'cursor:pointer',
+                'font-size:17px',
+                'color:#F8FAFC',
+                'transition:transform 0.2s ease, border-color 0.2s ease',
+                'outline:none'
+            ].join(';');
+            launcher.innerHTML = this._getEventIcon();
+
+            launcher.addEventListener('mouseenter', () => {
+                launcher.style.transform = 'scale(1.08)';
+                launcher.style.borderColor = 'rgba(255,255,255,0.45)';
+            });
+            launcher.addEventListener('mouseleave', () => {
+                launcher.style.transform = 'scale(1)';
+                launcher.style.borderColor = 'rgba(255,255,225,0.22)';
+            });
+            launcher.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.undismiss();
+            });
+
+            container.appendChild(launcher);
+        } else {
+            // Expanded pill container
+            const pill = document.createElement('div');
+            pill.style.cssText = [
+                'display:inline-flex',
+                'align-items:center',
+                'gap:6px',
+                'background:rgba(15,23,42,0.85)',
+                'backdrop-filter:blur(10px)',
+                '-webkit-backdrop-filter:blur(10px)',
+                'border:1px solid rgba(255,255,255,0.18)',
+                'border-radius:9999px',
+                'padding:5px 8px 5px 12px',
+                'box-shadow:0 4px 18px rgba(0,0,0,0.3)',
+                'color:#F8FAFC',
+                'font-size:12px',
+                'font-weight:500',
+                'transition:opacity 0.2s ease, transform 0.2s ease'
+            ].join(';');
+
+            // Status indicator dot
+            const dot = document.createElement('span');
+            dot.style.cssText = [
+                'width:7px',
+                'height:7px',
+                'border-radius:50%',
+                `background:${this._paused ? '#F59E0B' : '#10B981'}`,
+                'display:inline-block',
+                'transition:background 0.2s ease'
+            ].join(';');
+            this._controlDot = dot;
+
+            // Toggle button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.type = 'button';
+            toggleBtn.setAttribute('aria-pressed', this._paused ? 'true' : 'false');
+            toggleBtn.setAttribute('aria-label', this._paused ? 'Resume celebration effects (Press Esc)' : 'Pause celebration effects (Press Esc)');
+            toggleBtn.style.cssText = [
+                'background:transparent',
+                'border:none',
+                'color:#F8FAFC',
+                'font-family:inherit',
+                'font-size:12px',
+                'font-weight:600',
+                'display:inline-flex',
+                'align-items:center',
+                'gap:6px',
+                'cursor:pointer',
+                'padding:2px 4px',
+                'outline:none'
+            ].join(';');
+
+            const label = document.createElement('span');
+            label.textContent = this._paused ? 'Resume' : 'Pause';
+            this._controlLabel = label;
+
+            toggleBtn.appendChild(dot);
+            toggleBtn.appendChild(label);
+
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.togglePause();
+            });
+            this._toggleBtn = toggleBtn;
+
+            // Close / Dismiss button
+            const closeBtn = document.createElement('button');
+            closeBtn.type = 'button';
+            closeBtn.setAttribute('aria-label', 'Dismiss celebration overlay');
+            closeBtn.title = 'Dismiss celebration overlay (Click icon to restore)';
+            closeBtn.style.cssText = [
+                'background:rgba(255,255,255,0.08)',
+                'border:none',
+                'color:#94A3B8',
+                'font-family:inherit',
+                'font-size:13px',
+                'line-height:1',
+                'width:20px',
+                'height:20px',
+                'border-radius:50%',
+                'display:inline-flex',
+                'align-items:center',
+                'justify-content:center',
+                'cursor:pointer',
+                'padding:0',
+                'margin-left:2px',
+                'transition:color 0.15s ease, background 0.15s ease',
+                'outline:none'
+            ].join(';');
+            closeBtn.innerHTML = '&times;';
+
+            closeBtn.addEventListener('mouseenter', () => {
+                closeBtn.style.color = '#FFFFFF';
+                closeBtn.style.background = 'rgba(239,68,68,0.7)';
+            });
+            closeBtn.addEventListener('mouseleave', () => {
+                closeBtn.style.color = '#94A3B8';
+                closeBtn.style.background = 'rgba(255,255,255,0.08)';
+            });
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.dismiss();
+            });
+
+            pill.appendChild(toggleBtn);
+            pill.appendChild(closeBtn);
+            container.appendChild(pill);
+        }
+    }
+
+    _updateControlsUI() {
+        if (!this._controlsEl) return;
+        this._renderControlsContent();
+    }
+
+    _removeControls() {
+        if (this._keyHandler && typeof window !== 'undefined') {
+            window.removeEventListener('keydown', this._keyHandler);
+            this._keyHandler = null;
+        }
+        if (this._controlsEl && this._controlsEl.parentNode) {
+            this._controlsEl.parentNode.removeChild(this._controlsEl);
+        }
+        this._controlsEl = null;
+        this._toggleBtn = null;
+        this._controlDot = null;
+        this._controlLabel = null;
+    }
+
     _setSize() {
+        if (typeof window === 'undefined') return;
         this._width = window.innerWidth;
         this._height = window.innerHeight;
         this._dpr = getSafeDPR();
 
         if (this._canvas && this._ctx) {
-            // Crisp HiDPI / Retina display buffer sizing
             this._canvas.width = this._width * this._dpr;
             this._canvas.height = this._height * this._dpr;
-            this._ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
-            this._ctx.scale(this._dpr, this._dpr);    // Scale to match CSS pixels
+            this._ctx.setTransform(1, 0, 0, 1, 0, 0);
+            this._ctx.scale(this._dpr, this._dpr);
         }
 
         if (this._activeModule && typeof this._activeModule.resize === 'function') {
@@ -195,7 +441,7 @@ class EventOverlayEngine {
     }
 
     _render(time) {
-        if (!this._running || this._paused) return;
+        if (!this._running || this._paused || this._tabHidden) return;
 
         if (this._firstFrame) {
             this._firstFrame = false;
@@ -203,10 +449,9 @@ class EventOverlayEngine {
             this._lastTime = time;
         }
 
-        const delta = Math.min(64, time - this._lastTime); // Cap delta to avoid frame explosion
+        const delta = Math.min(64, time - this._lastTime);
         this._lastTime = time;
 
-        // Auto-stop duration check
         if (this.duration > 0 && time - this._startTime > this.duration) {
             this.stop();
             return;
@@ -216,14 +461,16 @@ class EventOverlayEngine {
         const w = this._width;
         const h = this._height;
 
-        ctx.clearRect(0, 0, w, h);
+        if (ctx) {
+            ctx.clearRect(0, 0, w, h);
 
-        if (this._activeModule) {
-            if (typeof this._activeModule.update === 'function') {
-                this._activeModule.update(time, delta, w, h);
-            }
-            if (typeof this._activeModule.draw === 'function') {
-                this._activeModule.draw(ctx, w, h, time);
+            if (this._activeModule) {
+                if (typeof this._activeModule.update === 'function') {
+                    this._activeModule.update(time, delta, w, h);
+                }
+                if (typeof this._activeModule.draw === 'function') {
+                    this._activeModule.draw(ctx, w, h, time);
+                }
             }
         }
 
@@ -270,7 +517,27 @@ class EventOverlayEngine {
      * @returns {EventOverlayEngine}
      */
     start() {
-        if (this._running) return this;
+        if (this._running) {
+            if (this._dismissed) {
+                return this.undismiss();
+            }
+            if (this._paused) {
+                return this.resume();
+            }
+            return this;
+        }
+
+        // Check if user previously dismissed or paused overlay in this session
+        if (this.persistPreference && typeof sessionStorage !== 'undefined') {
+            try {
+                if (sessionStorage.getItem('event_overlay_dismissed') === 'true') {
+                    this._dismissed = true;
+                    this._paused = true;
+                } else if (sessionStorage.getItem('event_overlay_paused') === 'true') {
+                    this._paused = true;
+                }
+            } catch (e) {}
+        }
 
         // Check reduced motion preference
         if (this.respectReducedMotion && prefersReducedMotion()) {
@@ -288,45 +555,204 @@ class EventOverlayEngine {
         }
 
         this._createCanvas();
-        this._width = window.innerWidth;
-        this._height = window.innerHeight;
+        this._width = typeof window !== 'undefined' ? window.innerWidth : 1920;
+        this._height = typeof window !== 'undefined' ? window.innerHeight : 1080;
         this._dpr = getSafeDPR();
 
-        if (this._activeModule && typeof this._activeModule.init === 'function') {
+        if (this._activeModule && typeof this._activeModule.init === 'function' && this._ctx) {
             this._activeModule.init(this._ctx, this._width, this._height, this.eventOptions);
         }
 
         this._setSize();
+        this._createControls();
 
-        // Debounced resize handler
-        this._resizeHandler = () => {
-            clearTimeout(this._resizeTimer);
-            this._resizeTimer = setTimeout(() => this._setSize(), 100);
-        };
-        window.addEventListener('resize', this._resizeHandler);
+        if (typeof window !== 'undefined') {
+            // Debounced resize handler
+            this._resizeHandler = () => {
+                clearTimeout(this._resizeTimer);
+                this._resizeTimer = setTimeout(() => this._setSize(), 100);
+            };
+            window.addEventListener('resize', this._resizeHandler);
+        }
 
-        // Visibility Change listener — pauses canvas loop in inactive tabs to save CPU & battery
-        this._visibilityHandler = () => {
-            if (document.hidden) {
-                this._paused = true;
-                if (this._animationId) {
-                    cancelAnimationFrame(this._animationId);
-                    this._animationId = null;
+        if (typeof document !== 'undefined') {
+            // Visibility Change listener — pauses canvas loop in inactive tabs to save CPU & battery
+            this._visibilityHandler = () => {
+                if (document.hidden) {
+                    this._tabHidden = true;
+                    if (this._animationId) {
+                        cancelAnimationFrame(this._animationId);
+                        this._animationId = null;
+                    }
+                } else {
+                    this._tabHidden = false;
+                    // Resume only if running and not user-paused
+                    if (this._running && !this._paused) {
+                        this._firstFrame = true;
+                        this._lastTime = performance.now();
+                        if (!this._animationId) {
+                            this._animationId = requestAnimationFrame((t) => this._render(t));
+                        }
+                    }
                 }
-            } else {
-                this._paused = false;
-                this._firstFrame = true; // Reset timing on resume
-                this._animationId = requestAnimationFrame((t) => this._render(t));
-            }
-        };
-        document.addEventListener('visibilitychange', this._visibilityHandler);
+            };
+            document.addEventListener('visibilitychange', this._visibilityHandler);
+        }
 
         this._running = true;
-        this._paused = false;
+        this._tabHidden = false;
         this._firstFrame = true;
-        this._animationId = requestAnimationFrame((t) => this._render(t));
+
+        if (!this._paused) {
+            this._animationId = requestAnimationFrame((t) => this._render(t));
+        }
 
         return this;
+    }
+
+    /**
+     * Pause overlay animation loop.
+     * @returns {EventOverlayEngine}
+     */
+    pause() {
+        if (!this._running) return this;
+        this._paused = true;
+
+        if (this._animationId) {
+            cancelAnimationFrame(this._animationId);
+            this._animationId = null;
+        }
+
+        if (this._canvas) {
+            this._canvas.style.opacity = '0';
+        }
+
+        this._updateControlsUI();
+
+        if (this.persistPreference && typeof sessionStorage !== 'undefined') {
+            try {
+                sessionStorage.setItem('event_overlay_paused', 'true');
+            } catch (e) {}
+        }
+
+        if (typeof this.onToggle === 'function') {
+            this.onToggle(true);
+        }
+
+        return this;
+    }
+
+    /**
+     * Resume overlay animation loop.
+     * @returns {EventOverlayEngine}
+     */
+    resume() {
+        this._dismissed = false;
+        if (!this._running) {
+            return this.start();
+        }
+
+        this._paused = false;
+        this._firstFrame = true;
+        this._lastTime = performance.now();
+
+        if (this._canvas) {
+            this._canvas.style.opacity = `${this.opacity}`;
+        }
+
+        this._updateControlsUI();
+
+        if (this.persistPreference && typeof sessionStorage !== 'undefined') {
+            try {
+                sessionStorage.removeItem('event_overlay_paused');
+            } catch (e) {}
+        }
+
+        if (typeof this.onToggle === 'function') {
+            this.onToggle(false);
+        }
+
+        if (!this._animationId && !this._tabHidden) {
+            this._animationId = requestAnimationFrame((t) => this._render(t));
+        }
+
+        return this;
+    }
+
+    /**
+     * Toggle pause / resume state.
+     * @returns {EventOverlayEngine}
+     */
+    togglePause() {
+        if (this._dismissed) {
+            return this.undismiss();
+        }
+        return this._paused ? this.resume() : this.pause();
+    }
+
+    /**
+     * Check if overlay is paused.
+     * @returns {boolean}
+     */
+    isPaused() {
+        return this._paused;
+    }
+
+    /**
+     * Dismiss overlay to minimal launcher badge.
+     * @returns {EventOverlayEngine}
+     */
+    dismiss() {
+        this._dismissed = true;
+        this._paused = true;
+
+        if (this._animationId) {
+            cancelAnimationFrame(this._animationId);
+            this._animationId = null;
+        }
+
+        if (this._canvas) {
+            this._canvas.style.opacity = '0';
+        }
+
+        if (this.persistPreference && typeof sessionStorage !== 'undefined') {
+            try {
+                sessionStorage.setItem('event_overlay_dismissed', 'true');
+            } catch (e) {}
+        }
+
+        if (typeof this.onDismiss === 'function') {
+            this.onDismiss();
+        }
+        if (typeof this.onToggle === 'function') {
+            this.onToggle(true);
+        }
+
+        this._updateControlsUI();
+        return this;
+    }
+
+    /**
+     * Restore overlay from dismissed state.
+     * @returns {EventOverlayEngine}
+     */
+    undismiss() {
+        this._dismissed = false;
+        if (this.persistPreference && typeof sessionStorage !== 'undefined') {
+            try {
+                sessionStorage.removeItem('event_overlay_dismissed');
+            } catch (e) {}
+        }
+        this.resume();
+        return this;
+    }
+
+    /**
+     * Check if overlay is dismissed.
+     * @returns {boolean}
+     */
+    isDismissed() {
+        return this._dismissed;
     }
 
     /**
@@ -336,6 +762,7 @@ class EventOverlayEngine {
     stop() {
         this._running = false;
         this._paused = false;
+        this._tabHidden = false;
 
         if (this._animationId) {
             cancelAnimationFrame(this._animationId);
@@ -345,14 +772,16 @@ class EventOverlayEngine {
             clearTimeout(this._resizeTimer);
             this._resizeTimer = null;
         }
-        if (this._resizeHandler) {
+        if (this._resizeHandler && typeof window !== 'undefined') {
             window.removeEventListener('resize', this._resizeHandler);
             this._resizeHandler = null;
         }
-        if (this._visibilityHandler) {
+        if (this._visibilityHandler && typeof document !== 'undefined') {
             document.removeEventListener('visibilitychange', this._visibilityHandler);
             this._visibilityHandler = null;
         }
+
+        this._removeControls();
 
         if (this._activeModule && typeof this._activeModule.destroy === 'function') {
             this._activeModule.destroy();
@@ -2547,6 +2976,35 @@ export function stop() {
         _activeInstance = null;
     }
 }
+export function pause() {
+    if (_activeInstance) {
+        _activeInstance.pause();
+    }
+}
+
+export function resume() {
+    if (_activeInstance) {
+        _activeInstance.resume();
+    }
+}
+
+export function togglePause() {
+    if (_activeInstance) {
+        _activeInstance.togglePause();
+    }
+}
+
+export function isPaused() {
+    return _activeInstance ? _activeInstance.isPaused() : false;
+}
+
+export function dismiss() {
+    if (_activeInstance) {
+        _activeInstance.dismiss();
+        _activeInstance = null;
+    }
+}
+
 
 export function toggle(eventName = 'independence-day', options = {}) {
     if (_activeInstance && _activeInstance.isRunning()) {
@@ -2579,9 +3037,14 @@ export {
 };
 
 const EventOverlay = {
-    version: '1.0.0',
+    version: '',
     start,
     stop,
+    pause,
+    resume,
+    togglePause,
+    isPaused,
+    dismiss,
     toggle,
     isRunning,
     create,

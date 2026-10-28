@@ -9,6 +9,9 @@ export interface IndependenceDayOptions {
     showGlow?: boolean;
     showWave?: boolean;
     waveOpacity?: number;
+    showControls?: boolean;
+    controlPosition?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+    persistPreference?: boolean;
 }
 
 export interface IndependenceDayOverlayProps extends IndependenceDayOptions {
@@ -21,6 +24,11 @@ export interface IndependenceDayOverlayProps extends IndependenceDayOptions {
 
 export declare function start(options?: IndependenceDayOptions): any;
 export declare function stop(): void;
+export declare function pause(): void;
+export declare function resume(): void;
+export declare function togglePause(): void;
+export declare function isPaused(): boolean;
+export declare function dismiss(): void;
 export declare function toggle(options?: IndependenceDayOptions): void;
 export declare function isRunning(): boolean;
 

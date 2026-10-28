@@ -26,6 +26,11 @@ export interface DiwaliOverlayProps extends DiwaliOptions {
 
 export declare function start(options?: DiwaliOptions): any;
 export declare function stop(): void;
+export declare function pause(): void;
+export declare function resume(): void;
+export declare function togglePause(): void;
+export declare function isPaused(): boolean;
+export declare function dismiss(): void;
 export declare function toggle(options?: DiwaliOptions): void;
 export declare function isRunning(): boolean;
 

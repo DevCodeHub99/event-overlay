@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const TRICOLOR = {
     saffron: { r: 255, g: 153, b: 51, hex: '#FF9933' },
@@ -672,6 +672,12 @@ export interface IndependenceDayOverlayProps {
     waveOpacity?: number;
     zIndex?: number;
     opacity?: number;
+    /** Show accessible floating pause/resume control button */
+    showControls?: boolean;
+    /** Position of floating control */
+    controlPosition?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+    /** Remember user pause/dismiss choice for current session */
+    persistPreference?: boolean;
 }
 
 export default function IndependenceDayOverlay({
@@ -684,11 +690,86 @@ export default function IndependenceDayOverlay({
     showWave = true,
     waveOpacity = 0.65,
     zIndex = 99999,
-    opacity = 0.95
+    opacity = 0.95,
+    showControls = true,
+    controlPosition = 'bottom-right',
+    persistPreference = true
 }: IndependenceDayOverlayProps) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+    const [paused, setPaused] = useState<boolean>(() => {
+        if (typeof window === 'undefined' || !persistPreference) return false;
+        try {
+            return sessionStorage.getItem('event_overlay_paused') === 'true';
+        } catch {
+            return false;
+        }
+    });
+
+    const [dismissed, setDismissed] = useState<boolean>(() => {
+        if (typeof window === 'undefined' || !persistPreference) return false;
+        try {
+            return sessionStorage.getItem('event_overlay_dismissed') === 'true';
+        } catch {
+            return false;
+        }
+    });
+
+    const pausedRef = useRef(paused);
+    pausedRef.current = paused;
+
+    const togglePause = () => {
+        setPaused((prev) => {
+            const next = !prev;
+            if (persistPreference && typeof sessionStorage !== 'undefined') {
+                try {
+                    if (next) {
+                        sessionStorage.setItem('event_overlay_paused', 'true');
+                    } else {
+                        sessionStorage.removeItem('event_overlay_paused');
+                    }
+                } catch {}
+            }
+            return next;
+        });
+    };
+
+    const handleDismiss = () => {
+        setDismissed(true);
+        setPaused(true);
+        if (persistPreference && typeof sessionStorage !== 'undefined') {
+            try {
+                sessionStorage.setItem('event_overlay_dismissed', 'true');
+            } catch {}
+        }
+    };
+
+    const handleUndismiss = () => {
+        setDismissed(false);
+        setPaused(false);
+        if (persistPreference && typeof sessionStorage !== 'undefined') {
+            try {
+                sessionStorage.removeItem('event_overlay_dismissed');
+                sessionStorage.removeItem('event_overlay_paused');
+            } catch {}
+        }
+    };
+
     useEffect(() => {
+        if (dismissed) return;
+
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape' || e.keyCode === 27) {
+                togglePause();
+            }
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [dismissed]);
+
+    useEffect(() => {
+        if (dismissed) return;
+
         const canvas = canvasRef.current;
         if (!canvas) return;
 
@@ -738,6 +819,7 @@ export default function IndependenceDayOverlay({
         let nextFireworkDelay = Math.random() * 2000 + 1000;
 
         const render = (time: number) => {
+            if (pausedRef.current || document.hidden) return;
             ctx.clearRect(0, 0, width, height);
 
             // 1. Ambient Glow
@@ -812,28 +894,175 @@ export default function IndependenceDayOverlay({
             animationFrameId = requestAnimationFrame(render);
         };
 
-        animationFrameId = requestAnimationFrame(render);
+        // Visibility Change listener
+        const onVisibilityChange = () => {
+            if (!document.hidden && !pausedRef.current) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = requestAnimationFrame(render);
+            }
+        };
+        document.addEventListener('visibilitychange', onVisibilityChange);
+
+        if (!pausedRef.current) {
+            animationFrameId = requestAnimationFrame(render);
+        }
 
         return () => {
             window.removeEventListener('resize', setSize);
+            document.removeEventListener('visibilitychange', onVisibilityChange);
             cancelAnimationFrame(animationFrameId);
         };
-    }, [maxFlags, maxKites, maxJets, maxFireworks, maxPetals, showGlow, showWave, waveOpacity]);
+    }, [dismissed, paused, maxFlags, maxKites, maxJets, maxFireworks, maxPetals, showGlow, showWave, waveOpacity]);
+
+
+
+    const posStyles: Record<string, React.CSSProperties> = {
+        'bottom-right': { bottom: 20, right: 20 },
+        'bottom-left': { bottom: 20, left: 20 },
+        'top-right': { top: 20, right: 20 },
+        'top-left': { top: 20, left: 20 }
+    };
+    const controlPosStyle = posStyles[controlPosition] || posStyles['bottom-right'];
 
     return (
-        <canvas
-            ref={canvasRef}
-            style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                pointerEvents: 'none',
-                zIndex,
-                opacity
-            }}
-            aria-hidden="true"
-        />
+        <>
+            <canvas
+                ref={canvasRef}
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    pointerEvents: 'none',
+                    zIndex,
+                    opacity: paused ? 0 : opacity,
+                    transition: 'opacity 0.25s ease'
+                }}
+                aria-hidden="true"
+            />
+            {showControls && (
+                <div
+                    role="region"
+                    aria-label="Celebration overlay controls"
+                    style={{
+                        position: 'fixed',
+                        ...controlPosStyle,
+                        zIndex: zIndex + 1,
+                        pointerEvents: 'auto',
+                        userSelect: 'none'
+                    }}
+                >
+                    {dismissed ? (
+                        <button
+                            type="button"
+                            onClick={handleUndismiss}
+                            aria-label="Show celebration overlay (Press Esc)"
+                            title="Show celebration overlay (Press Esc)"
+                            style={{
+                                width: 38,
+                                height: 38,
+                                borderRadius: '50%',
+                                background: 'rgba(15,23,42,0.85)',
+                                backdropFilter: 'blur(10px)',
+                                WebkitBackdropFilter: 'blur(10px)',
+                                border: '1px solid rgba(255,255,255,0.22)',
+                                boxShadow: '0 4px 18px rgba(0,0,0,0.35)',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                                fontSize: 17,
+                                color: '#F8FAFC',
+                                transition: 'transform 0.2s ease, border-color 0.2s ease',
+                                outline: 'none'
+                            }}
+                        >
+                            🇮🇳
+                        </button>
+                    ) : (
+                        <div
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 6,
+                                background: 'rgba(15,23,42,0.85)',
+                                backdropFilter: 'blur(10px)',
+                                WebkitBackdropFilter: 'blur(10px)',
+                                border: '1px solid rgba(255,255,255,0.18)',
+                                borderRadius: 9999,
+                                padding: '5px 8px 5px 12px',
+                                boxShadow: '0 4px 18px rgba(0,0,0,0.3)',
+                                color: '#F8FAFC',
+                                fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif',
+                                fontSize: 12,
+                                fontWeight: 500,
+                                transition: 'opacity 0.2s ease, transform 0.2s ease'
+                            }}
+                        >
+                            <button
+                                type="button"
+                                onClick={togglePause}
+                                aria-pressed={paused}
+                                aria-label={paused ? 'Resume celebration effects (Press Esc)' : 'Pause celebration effects (Press Esc)'}
+                                style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: '#F8FAFC',
+                                    fontFamily: 'inherit',
+                                    fontSize: 12,
+                                    fontWeight: 600,
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: 6,
+                                    cursor: 'pointer',
+                                    padding: '2px 4px',
+                                    outline: 'none'
+                                }}
+                            >
+                                <span
+                                    style={{
+                                        width: 7,
+                                        height: 7,
+                                        borderRadius: '50%',
+                                        background: paused ? '#F59E0B' : '#10B981',
+                                        display: 'inline-block',
+                                        transition: 'background 0.2s ease'
+                                    }}
+                                />
+                                <span>{paused ? 'Resume' : 'Pause'}</span>
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleDismiss}
+                                aria-label="Dismiss celebration overlay"
+                                title="Dismiss celebration overlay (Click icon to restore)"
+                                style={{
+                                    background: 'rgba(255,255,255,0.08)',
+                                    border: 'none',
+                                    color: '#94A3B8',
+                                    fontFamily: 'inherit',
+                                    fontSize: 13,
+                                    lineHeight: 1,
+                                    width: 20,
+                                    height: 20,
+                                    borderRadius: '50%',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    padding: 0,
+                                    marginLeft: 2,
+                                    transition: 'color 0.15s ease, background 0.15s ease',
+                                    outline: 'none'
+                                }}
+                            >
+                                &times;
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
+        </>
     );
 }

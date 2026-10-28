@@ -130,6 +130,35 @@ export function stop() {
         _activeInstance = null;
     }
 }
+export function pause() {
+    if (_activeInstance) {
+        _activeInstance.pause();
+    }
+}
+
+export function resume() {
+    if (_activeInstance) {
+        _activeInstance.resume();
+    }
+}
+
+export function togglePause() {
+    if (_activeInstance) {
+        _activeInstance.togglePause();
+    }
+}
+
+export function isPaused() {
+    return _activeInstance ? _activeInstance.isPaused() : false;
+}
+
+export function dismiss() {
+    if (_activeInstance) {
+        _activeInstance.dismiss();
+        _activeInstance = null;
+    }
+}
+
 
 export function toggle(eventName = 'independence-day', options = {}) {
     if (_activeInstance && _activeInstance.isRunning()) {
@@ -162,9 +191,14 @@ export {
 };
 
 const EventOverlay = {
-    version: '1.0.0',
+    version: '',
     start,
     stop,
+    pause,
+    resume,
+    togglePause,
+    isPaused,
+    dismiss,
     toggle,
     isRunning,
     create,
@@ -274,6 +308,40 @@ export function stop() {
         _activeInstance = null;
     }
 }
+export function pause() {
+    if (_activeInstance) {
+        _activeInstance.pause();
+    }
+}
+
+export function resume() {
+    if (_activeInstance) {
+        _activeInstance.resume();
+    }
+}
+
+export function togglePause() {
+    if (_activeInstance) {
+        _activeInstance.togglePause();
+    }
+}
+
+export function isPaused() {
+    return _activeInstance ? _activeInstance.isPaused() : false;
+}
+
+export function dismiss() {
+    if (_activeInstance) {
+        _activeInstance.dismiss();
+    }
+}
+
+export function undismiss() {
+    if (_activeInstance) {
+        _activeInstance.undismiss();
+    }
+}
+
 
 export function toggle(options = {}) {
     if (_activeInstance && _activeInstance.isRunning()) {
@@ -293,9 +361,15 @@ export {
 };
 
 const IndependenceDayOverlay = {
-    version: '1.0.0',
+    version: '',
     start,
     stop,
+    pause,
+    resume,
+    togglePause,
+    isPaused,
+    dismiss,
+    undismiss,
     toggle,
     isRunning,
     IndependenceDayEvent,
@@ -402,6 +476,40 @@ export function stop() {
         _activeInstance = null;
     }
 }
+export function pause() {
+    if (_activeInstance) {
+        _activeInstance.pause();
+    }
+}
+
+export function resume() {
+    if (_activeInstance) {
+        _activeInstance.resume();
+    }
+}
+
+export function togglePause() {
+    if (_activeInstance) {
+        _activeInstance.togglePause();
+    }
+}
+
+export function isPaused() {
+    return _activeInstance ? _activeInstance.isPaused() : false;
+}
+
+export function dismiss() {
+    if (_activeInstance) {
+        _activeInstance.dismiss();
+    }
+}
+
+export function undismiss() {
+    if (_activeInstance) {
+        _activeInstance.undismiss();
+    }
+}
+
 
 export function toggle(options = {}) {
     if (_activeInstance && _activeInstance.isRunning()) {
@@ -422,9 +530,15 @@ export {
 };
 
 const HoliOverlay = {
-    version: '1.0.0',
+    version: '',
     start,
     stop,
+    pause,
+    resume,
+    togglePause,
+    isPaused,
+    dismiss,
+    undismiss,
     toggle,
     isRunning,
     HoliEvent,
@@ -501,13 +615,13 @@ const esmDiwali = `/**
  */
 
 // ─── UTILS ───
-\${utilsClean}
+${utilsClean}
 
 // ─── CORE ENGINE ───
-\${engineClean}
+${engineClean}
 
 // ─── DIWALI EVENT ───
-\${diwaliClean}
+${diwaliClean}
 
 registerEvent(DiwaliEvent);
 
@@ -529,6 +643,40 @@ export function stop() {
         _activeInstance = null;
     }
 }
+export function pause() {
+    if (_activeInstance) {
+        _activeInstance.pause();
+    }
+}
+
+export function resume() {
+    if (_activeInstance) {
+        _activeInstance.resume();
+    }
+}
+
+export function togglePause() {
+    if (_activeInstance) {
+        _activeInstance.togglePause();
+    }
+}
+
+export function isPaused() {
+    return _activeInstance ? _activeInstance.isPaused() : false;
+}
+
+export function dismiss() {
+    if (_activeInstance) {
+        _activeInstance.dismiss();
+    }
+}
+
+export function undismiss() {
+    if (_activeInstance) {
+        _activeInstance.undismiss();
+    }
+}
+
 
 export function toggle(options = {}) {
     if (_activeInstance && _activeInstance.isRunning()) {
@@ -549,9 +697,15 @@ export {
 };
 
 const DiwaliOverlay = {
-    version: '1.0.0',
+    version: '',
     start,
     stop,
+    pause,
+    resume,
+    togglePause,
+    isPaused,
+    dismiss,
+    undismiss,
     toggle,
     isRunning,
     DiwaliEvent,
@@ -566,12 +720,12 @@ fs.writeFileSync(path.join(DIST_DIR, 'events', 'diwali.js'), esmDiwali, 'utf-8')
 fs.writeFileSync(path.join(DIST_DIR, 'events', 'diwali.min.js'), minify(esmDiwali), 'utf-8');
 
 const umdDiwaliCore = esmDiwali
-    .replace(/^export\\s+default\\s+\\w+;\\s*$/gm, '')
-    .replace(/^export\\s+const\\s+/gm, 'const ')
-    .replace(/^export\\s+let\\s+/gm, 'let ')
-    .replace(/^export\\s+function\\s+/gm, 'function ')
-    .replace(/^export\\s+class\\s+/gm, 'class ')
-    .replace(/^export\\s+\\{[\\s\\S]*?\\};\\s*$/gm, '')
+    .replace(/^export\s+default\s+\w+;\s*$/gm, '')
+    .replace(/^export\s+const\s+/gm, 'const ')
+    .replace(/^export\s+let\s+/gm, 'let ')
+    .replace(/^export\s+function\s+/gm, 'function ')
+    .replace(/^export\s+class\s+/gm, 'class ')
+    .replace(/^export\s+\{[\s\S]*?\};\s*$/gm, '')
     .trim();
 
 const umdDiwali = `/**
@@ -589,7 +743,7 @@ const umdDiwali = `/**
 }(typeof self !== 'undefined' ? self : this, function () {
     'use strict';
 
-\${umdDiwaliCore}
+${umdDiwaliCore}
 
     if (typeof document !== 'undefined') {
         var _script = document.currentScript || (function () {
@@ -669,6 +823,9 @@ export interface IndependenceDayOptions {
     showGlow?: boolean;
     showWave?: boolean;
     waveOpacity?: number;
+    showControls?: boolean;
+    controlPosition?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+    persistPreference?: boolean;
 }
 
 export interface IndependenceDayOverlayProps extends IndependenceDayOptions {
@@ -681,6 +838,11 @@ export interface IndependenceDayOverlayProps extends IndependenceDayOptions {
 
 export declare function start(options?: IndependenceDayOptions): any;
 export declare function stop(): void;
+export declare function pause(): void;
+export declare function resume(): void;
+export declare function togglePause(): void;
+export declare function isPaused(): boolean;
+export declare function dismiss(): void;
 export declare function toggle(options?: IndependenceDayOptions): void;
 export declare function isRunning(): boolean;
 
@@ -692,6 +854,96 @@ if (tsxIndep) {
     fs.writeFileSync(path.join(pkgIndepDir, 'IndependenceDayOverlay.tsx'), tsxIndep, 'utf-8');
 }
 fs.writeFileSync(path.join(pkgIndepDir, 'LICENSE'), licenseText, 'utf-8');
+const reactIndepJs = `import { useEffect, useRef } from 'react';
+import { EventOverlayEngine } from './index.js';
+
+export function IndependenceDayOverlay({
+    maxFlags = 3,
+    maxKites = 6,
+    maxJets = 2,
+    maxFireworks = 3,
+    maxPetals = 35,
+    showGlow = true,
+    showWave = true,
+    waveOpacity = 0.65,
+    zIndex = 99999,
+    opacity = 0.95,
+    duration = 0,
+    container,
+    showControls = true,
+    controlPosition = 'bottom-right',
+    persistPreference = true,
+    onToggle,
+    onDismiss,
+    active = true
+} = {}) {
+    const engineRef = useRef(null);
+
+    useEffect(() => {
+        if (!active) return;
+
+        engineRef.current = new EventOverlayEngine({
+            event: 'independence-day',
+            zIndex,
+            opacity,
+            duration,
+            container,
+            showControls,
+            controlPosition,
+            persistPreference,
+            onToggle,
+            onDismiss,
+            eventOptions: {
+                maxFlags,
+                maxKites,
+                maxJets,
+                maxFireworks,
+                maxPetals,
+                showGlow,
+                showWave,
+                waveOpacity
+            }
+        });
+        engineRef.current.start();
+
+        return () => {
+            if (engineRef.current) {
+                engineRef.current.stop();
+                engineRef.current = null;
+            }
+        };
+    }, [
+        active,
+        zIndex,
+        opacity,
+        maxFlags,
+        maxKites,
+        maxJets,
+        maxFireworks,
+        maxPetals,
+        showGlow,
+        showWave,
+        waveOpacity,
+        duration,
+        container,
+        showControls,
+        controlPosition,
+        persistPreference
+    ]);
+
+    return null;
+}
+
+export default IndependenceDayOverlay;
+`;
+fs.writeFileSync(path.join(pkgIndepDir, 'dist', 'react.js'), reactIndepJs, 'utf-8');
+fs.writeFileSync(path.join(pkgIndepDir, 'dist', 'react.d.ts'), `import type { FC } from 'react';
+import type { IndependenceDayOverlayProps } from './index';
+export * from './index';
+export declare const IndependenceDayOverlay: FC<IndependenceDayOverlayProps>;
+export default IndependenceDayOverlay;
+`, 'utf-8');
+
 
 const pkgIndepJson = {
     name: "@event-overlay/independence-day",
@@ -709,12 +961,21 @@ const pkgIndepJson = {
             default: "./dist/index.js"
         },
         "./react": {
-            import: "./IndependenceDayOverlay.tsx",
-            types: "./dist/index.d.ts"
+            import: "./dist/react.js",
+            types: "./dist/react.d.ts",
+            default: "./dist/react.js"
         },
         "./umd": "./dist/index.umd.js"
     },
     sideEffects: false,
+        peerDependencies: {
+        react: ">=16.8.0"
+    },
+    peerDependenciesMeta: {
+        react: {
+            optional: true
+        }
+    },
     publishConfig: {
         access: "public"
     },
@@ -1025,6 +1286,11 @@ export interface HoliOverlayProps extends HoliOptions {
 
 export declare function start(options?: HoliOptions): any;
 export declare function stop(): void;
+export declare function pause(): void;
+export declare function resume(): void;
+export declare function togglePause(): void;
+export declare function isPaused(): boolean;
+export declare function dismiss(): void;
 export declare function toggle(options?: HoliOptions): void;
 export declare function isRunning(): boolean;
 
@@ -1036,6 +1302,81 @@ if (tsxHoli) {
     fs.writeFileSync(path.join(pkgHoliDir, 'HoliOverlay.tsx'), tsxHoli, 'utf-8');
 }
 fs.writeFileSync(path.join(pkgHoliDir, 'LICENSE'), licenseText, 'utf-8');
+const reactHoliJs = `import { useEffect, useRef } from 'react';
+import { EventOverlayEngine } from './index.js';
+
+export function HoliOverlay({
+    zIndex = 99999,
+    opacity = 0.95,
+    maxBalloons = 15,
+    maxPichkaaris = 4,
+    colors,
+    duration = 0,
+    container,
+    showControls = true,
+    controlPosition = 'bottom-right',
+    persistPreference = true,
+    onToggle,
+    onDismiss,
+    active = true
+} = {}) {
+    const engineRef = useRef(null);
+
+    useEffect(() => {
+        if (!active) return;
+
+        engineRef.current = new EventOverlayEngine({
+            event: 'holi',
+            zIndex,
+            opacity,
+            duration,
+            container,
+            showControls,
+            controlPosition,
+            persistPreference,
+            onToggle,
+            onDismiss,
+            eventOptions: {
+                maxBalloons,
+                maxPichkaaris,
+                colors
+            }
+        });
+        engineRef.current.start();
+
+        return () => {
+            if (engineRef.current) {
+                engineRef.current.stop();
+                engineRef.current = null;
+            }
+        };
+    }, [
+        active,
+        zIndex,
+        opacity,
+        maxBalloons,
+        maxPichkaaris,
+        colors,
+        duration,
+        container,
+        showControls,
+        controlPosition,
+        persistPreference
+    ]);
+
+    return null;
+}
+
+export default HoliOverlay;
+`;
+fs.writeFileSync(path.join(pkgHoliDir, 'dist', 'react.js'), reactHoliJs, 'utf-8');
+fs.writeFileSync(path.join(pkgHoliDir, 'dist', 'react.d.ts'), `import type { FC } from 'react';
+import type { HoliOverlayProps } from './index';
+export * from './index';
+export declare const HoliOverlay: FC<HoliOverlayProps>;
+export default HoliOverlay;
+`, 'utf-8');
+
 
 const pkgHoliJson = {
     name: "@event-overlay/holi",
@@ -1053,12 +1394,21 @@ const pkgHoliJson = {
             default: "./dist/index.js"
         },
         "./react": {
-            import: "./HoliOverlay.tsx",
-            types: "./dist/index.d.ts"
+            import: "./dist/react.js",
+            types: "./dist/react.d.ts",
+            default: "./dist/react.js"
         },
         "./umd": "./dist/index.umd.js"
     },
     sideEffects: false,
+        peerDependencies: {
+        react: ">=16.8.0"
+    },
+    peerDependenciesMeta: {
+        react: {
+            optional: true
+        }
+    },
     publishConfig: {
         access: "public"
     },
@@ -1402,6 +1752,11 @@ export interface DiwaliOverlayProps extends DiwaliOptions {
 
 export declare function start(options?: DiwaliOptions): any;
 export declare function stop(): void;
+export declare function pause(): void;
+export declare function resume(): void;
+export declare function togglePause(): void;
+export declare function isPaused(): boolean;
+export declare function dismiss(): void;
 export declare function toggle(options?: DiwaliOptions): void;
 export declare function isRunning(): boolean;
 
@@ -1413,6 +1768,93 @@ if (tsxDiwali) {
     fs.writeFileSync(path.join(pkgDiwaliDir, 'DiwaliOverlay.tsx'), tsxDiwali, 'utf-8');
 }
 fs.writeFileSync(path.join(pkgDiwaliDir, 'LICENSE'), licenseText, 'utf-8');
+const reactDiwaliJs = `import { useEffect, useRef } from 'react';
+import { EventOverlayEngine } from './index.js';
+
+export function DiwaliOverlay({
+    zIndex = 99999,
+    opacity = 0.95,
+    enableFireworks = true,
+    enableDiyas = true,
+    enableFountains = true,
+    enableSpinners = true,
+    enableLanterns = true,
+    sparklerCursor = true,
+    colors,
+    duration = 0,
+    container,
+    showControls = true,
+    controlPosition = 'bottom-right',
+    persistPreference = true,
+    onToggle,
+    onDismiss,
+    active = true
+} = {}) {
+    const engineRef = useRef(null);
+
+    useEffect(() => {
+        if (!active) return;
+
+        engineRef.current = new EventOverlayEngine({
+            event: 'diwali',
+            zIndex,
+            opacity,
+            duration,
+            container,
+            showControls,
+            controlPosition,
+            persistPreference,
+            onToggle,
+            onDismiss,
+            eventOptions: {
+                enableFireworks,
+                enableDiyas,
+                enableFountains,
+                enableSpinners,
+                enableLanterns,
+                sparklerCursor,
+                colors
+            }
+        });
+        engineRef.current.start();
+
+        return () => {
+            if (engineRef.current) {
+                engineRef.current.stop();
+                engineRef.current = null;
+            }
+        };
+    }, [
+        active,
+        zIndex,
+        opacity,
+        enableFireworks,
+        enableDiyas,
+        enableFountains,
+        enableSpinners,
+        enableLanterns,
+        sparklerCursor,
+        colors,
+        duration,
+        container,
+        showControls,
+        controlPosition,
+        persistPreference
+    ]);
+
+    return null;
+}
+
+export default DiwaliOverlay;
+`;
+fs.writeFileSync(path.join(pkgDiwaliDir, 'dist', 'react.js'), reactDiwaliJs, 'utf-8');
+fs.writeFileSync(path.join(pkgDiwaliDir, 'dist', 'react.d.ts'), `import type { FC } from 'react';
+import type { DiwaliOverlayProps } from './index';
+export * from './index';
+export declare const DiwaliOverlay: FC<DiwaliOverlayProps>;
+export default DiwaliOverlay;
+`, 'utf-8');
+
 
 const pkgDiwaliJson = {
     name: "@event-overlay/diwali",
@@ -1430,12 +1872,21 @@ const pkgDiwaliJson = {
             default: "./dist/index.js"
         },
         "./react": {
-            import: "./DiwaliOverlay.tsx",
-            types: "./dist/index.d.ts"
+            import: "./dist/react.js",
+            types: "./dist/react.d.ts",
+            default: "./dist/react.js"
         },
         "./umd": "./dist/index.umd.js"
     },
     sideEffects: false,
+        peerDependencies: {
+        react: ">=16.8.0"
+    },
+    peerDependenciesMeta: {
+        react: {
+            optional: true
+        }
+    },
     publishConfig: {
         access: "public"
     },
@@ -1618,6 +2069,14 @@ const pkgCoreJson = {
         "./umd/diwali": "./dist/events/diwali.umd.js"
     },
     sideEffects: false,
+        peerDependencies: {
+        react: ">=16.8.0"
+    },
+    peerDependenciesMeta: {
+        react: {
+            optional: true
+        }
+    },
     publishConfig: {
         access: "public"
     },

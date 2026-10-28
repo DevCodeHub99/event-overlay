@@ -1,6 +1,6 @@
 {
   "name": "@event-overlay/holi",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "🎨 Vibrant, ultra-high-performance Holi festival celebration overlay with water balloons, pichkaari streams, and gulal colors. Zero dependencies.",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -14,12 +14,21 @@
       "default": "./dist/index.js"
     },
     "./react": {
-      "import": "./HoliOverlay.tsx",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/react.js",
+      "types": "./dist/react.d.ts",
+      "default": "./dist/react.js"
     },
     "./umd": "./dist/index.umd.js"
   },
   "sideEffects": false,
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
   "publishConfig": {
     "access": "public"
   },
