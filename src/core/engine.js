@@ -176,6 +176,14 @@ export class EventOverlayEngine {
             'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif'
         ].join(';');
 
+        // Screen reader announcement region (WCAG 4.1.2 & 4.1.3)
+        const liveRegion = document.createElement('div');
+        liveRegion.setAttribute('aria-live', 'polite');
+        liveRegion.setAttribute('aria-atomic', 'true');
+        liveRegion.style.cssText = 'position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;';
+        container.appendChild(liveRegion);
+        this._liveRegion = liveRegion;
+
         document.body.appendChild(container);
         this._controlsEl = container;
 
@@ -188,6 +196,12 @@ export class EventOverlayEngine {
             }
         };
         window.addEventListener('keydown', this._keyHandler);
+    }
+
+    _announce(message) {
+        if (this._liveRegion) {
+            this._liveRegion.textContent = message;
+        }
     }
 
     _renderControlsContent() {
@@ -232,6 +246,13 @@ export class EventOverlayEngine {
             launcher.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.undismiss();
+            });
+            launcher.addEventListener('focus', () => {
+                launcher.style.outline = '2px solid #38BDF8';
+                launcher.style.outlineOffset = '2px';
+            });
+            launcher.addEventListener('blur', () => {
+                launcher.style.outline = 'none';
             });
 
             container.appendChild(launcher);
@@ -297,6 +318,14 @@ export class EventOverlayEngine {
             toggleBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.togglePause();
+            });
+            toggleBtn.addEventListener('focus', () => {
+                toggleBtn.style.outline = '2px solid #38BDF8';
+                toggleBtn.style.outlineOffset = '2px';
+                toggleBtn.style.borderRadius = '4px';
+            });
+            toggleBtn.addEventListener('blur', () => {
+                toggleBtn.style.outline = 'none';
             });
             this._toggleBtn = toggleBtn;
 
@@ -481,14 +510,19 @@ export class EventOverlayEngine {
             } catch (e) {}
         }
 
-        // Check reduced motion preference
+        // Check reduced motion preference (WCAG 2.3.3)
         if (this.respectReducedMotion && prefersReducedMotion()) {
-            this.opacity = Math.min(this.opacity, 0.6);
+            this.opacity = Math.min(this.opacity, 0.4);
             this.eventOptions = {
                 ...this.eventOptions,
                 maxJets: 0,
-                maxFireworks: 1,
-                maxBalloons: 5
+                maxFireworks: 0,
+                maxKites: 2,
+                enableFireworks: false,
+                enableSpinners: false,
+                maxBalloons: 3,
+                maxPichkaaris: 1,
+                reducedMotion: true
             };
         }
 
@@ -559,6 +593,7 @@ export class EventOverlayEngine {
     pause() {
         if (!this._running) return this;
         this._paused = true;
+        this._announce('Celebration overlay paused');
 
         if (this._animationId) {
             cancelAnimationFrame(this._animationId);
@@ -595,6 +630,7 @@ export class EventOverlayEngine {
         }
 
         this._paused = false;
+        this._announce('Celebration overlay resumed');
         this._firstFrame = true;
         this._lastTime = performance.now();
 
@@ -647,6 +683,7 @@ export class EventOverlayEngine {
     dismiss() {
         this._dismissed = true;
         this._paused = true;
+        this._announce('Celebration overlay minimized');
 
         if (this._animationId) {
             cancelAnimationFrame(this._animationId);

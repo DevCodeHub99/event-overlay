@@ -34,6 +34,8 @@ class SparkParticle {
     constructor(x, y, color, vx, vy, options = {}) {
         this.x = x;
         this.y = y;
+        this.prevX = x;
+        this.prevY = y;
         this.color = color || DIWALI_COLORS[0];
         this.vx = vx ?? (Math.random() - 0.5) * 8;
         this.vy = vy ?? (Math.random() - 0.5) * 8;
@@ -44,13 +46,12 @@ class SparkParticle {
         this.maxLife = options.maxLife ?? randomRange(30, 65);
         this.flicker = options.flicker ?? (Math.random() > 0.4);
         this.trail = options.trail ?? false;
-        this.history = this.trail ? [] : null;
     }
 
     update() {
-        if (this.trail && this.history) {
-            this.history.push({ x: this.x, y: this.y });
-            if (this.history.length > 4) this.history.shift();
+        if (this.trail) {
+            this.prevX = this.x;
+            this.prevY = this.y;
         }
 
         this.vx *= this.friction;
@@ -67,18 +68,17 @@ class SparkParticle {
 
         let alpha = fade;
         if (this.flicker) {
-            alpha *= (0.4 + Math.random() * 0.6);
+            // Clamped flicker to avoid violent strobe (WCAG 2.3.1 photosensitive safety)
+            alpha *= (0.55 + Math.random() * 0.45);
         }
 
         ctx.fillStyle = `rgba(${this.color.r},${this.color.g},${this.color.b},${alpha})`;
 
-        // Draw trail if enabled
-        if (this.trail && this.history && this.history.length > 1) {
+        // Draw motion streak trail without heap allocations
+        if (this.trail) {
             ctx.beginPath();
-            ctx.moveTo(this.history[0].x, this.history[0].y);
-            for (let i = 1; i < this.history.length; i++) {
-                ctx.lineTo(this.history[i].x, this.history[i].y);
-            }
+            ctx.moveTo(this.prevX, this.prevY);
+            ctx.lineTo(this.x, this.y);
             ctx.strokeStyle = `rgba(${this.color.r},${this.color.g},${this.color.b},${alpha * 0.45})`;
             ctx.lineWidth = Math.max(0.5, this.size * 0.7);
             ctx.stroke();

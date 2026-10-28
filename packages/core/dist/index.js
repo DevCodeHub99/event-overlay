@@ -45,12 +45,73 @@ function getSafeDPR() {
 }
 
 /**
- * Detect user's reduced motion OS preference for accessibility.
+ * Detect user's reduced motion OS preference for accessibility (WCAG 2.3.3).
  * @returns {boolean}
  */
 function prefersReducedMotion() {
     if (typeof window === 'undefined' || !window.matchMedia) return false;
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+/**
+ * Step particle physics in-place (velocity integration with friction and gravity).
+ * @param {Object} p - Particle with x, y, vx, vy, life
+ * @param {number} gravity
+ * @param {number} friction
+ */
+function stepParticle(p, gravity, friction) {
+    p.vx *= friction;
+    p.vy = (p.vy + gravity) * friction;
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life++;
+}
+
+/**
+ * Clamp a number between min and max.
+ * @param {number} val
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
+function clamp(val, min, max) {
+    return Math.max(min, Math.min(max, val));
+}
+
+/**
+ * Linear interpolation between a and b.
+ * @param {number} a
+ * @param {number} b
+ * @param {number} t
+ * @returns {number}
+ */
+function lerp(a, b, t) {
+    return a + (b - a) * t;
+}
+
+/**
+ * Convert hex color string to RGB object.
+ * @param {string} hex
+ * @returns {{ r: number, g: number, b: number }}
+ */
+function hexToRgb(hex) {
+    const clean = hex.replace('#', '');
+    const num = parseInt(clean, 16);
+    return {
+        r: (num >> 16) & 255,
+        g: (num >> 8) & 255,
+        b: num & 255
+    };
+}
+
+/**
+ * Format RGBA color string with clamped alpha.
+ * @param {{ r: number, g: number, b: number }} c
+ * @param {number} alpha
+ * @returns {string}
+ */
+function rgbToString(c, alpha = 1) {
+    return `rgba(${c.r},${c.g},${c.b},${clamp(alpha, 0, 1)})`;
 }
 
 
@@ -232,6 +293,14 @@ class EventOverlayEngine {
             'font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif'
         ].join(';');
 
+        // Screen reader announcement region (WCAG 4.1.2 & 4.1.3)
+        const liveRegion = document.createElement('div');
+        liveRegion.setAttribute('aria-live', 'polite');
+        liveRegion.setAttribute('aria-atomic', 'true');
+        liveRegion.style.cssText = 'position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;';
+        container.appendChild(liveRegion);
+        this._liveRegion = liveRegion;
+
         document.body.appendChild(container);
         this._controlsEl = container;
 
@@ -244,6 +313,12 @@ class EventOverlayEngine {
             }
         };
         window.addEventListener('keydown', this._keyHandler);
+    }
+
+    _announce(message) {
+        if (this._liveRegion) {
+            this._liveRegion.textContent = message;
+        }
     }
 
     _renderControlsContent() {
@@ -288,6 +363,13 @@ class EventOverlayEngine {
             launcher.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.undismiss();
+            });
+            launcher.addEventListener('focus', () => {
+                launcher.style.outline = '2px solid #38BDF8';
+                launcher.style.outlineOffset = '2px';
+            });
+            launcher.addEventListener('blur', () => {
+                launcher.style.outline = 'none';
             });
 
             container.appendChild(launcher);
@@ -353,6 +435,14 @@ class EventOverlayEngine {
             toggleBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.togglePause();
+            });
+            toggleBtn.addEventListener('focus', () => {
+                toggleBtn.style.outline = '2px solid #38BDF8';
+                toggleBtn.style.outlineOffset = '2px';
+                toggleBtn.style.borderRadius = '4px';
+            });
+            toggleBtn.addEventListener('blur', () => {
+                toggleBtn.style.outline = 'none';
             });
             this._toggleBtn = toggleBtn;
 
@@ -537,14 +627,19 @@ class EventOverlayEngine {
             } catch (e) {}
         }
 
-        // Check reduced motion preference
+        // Check reduced motion preference (WCAG 2.3.3)
         if (this.respectReducedMotion && prefersReducedMotion()) {
-            this.opacity = Math.min(this.opacity, 0.6);
+            this.opacity = Math.min(this.opacity, 0.4);
             this.eventOptions = {
                 ...this.eventOptions,
                 maxJets: 0,
-                maxFireworks: 1,
-                maxBalloons: 5
+                maxFireworks: 0,
+                maxKites: 2,
+                enableFireworks: false,
+                enableSpinners: false,
+                maxBalloons: 3,
+                maxPichkaaris: 1,
+                reducedMotion: true
             };
         }
 
@@ -615,6 +710,7 @@ class EventOverlayEngine {
     pause() {
         if (!this._running) return this;
         this._paused = true;
+        this._announce('Celebration overlay paused');
 
         if (this._animationId) {
             cancelAnimationFrame(this._animationId);
@@ -651,6 +747,7 @@ class EventOverlayEngine {
         }
 
         this._paused = false;
+        this._announce('Celebration overlay resumed');
         this._firstFrame = true;
         this._lastTime = performance.now();
 
@@ -703,6 +800,7 @@ class EventOverlayEngine {
     dismiss() {
         this._dismissed = true;
         this._paused = true;
+        this._announce('Celebration overlay minimized');
 
         if (this._animationId) {
             cancelAnimationFrame(this._animationId);

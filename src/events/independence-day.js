@@ -440,12 +440,10 @@ class SmokeParticle {
     draw(ctx) {
         const progress = this.life / this.maxLife;
         const alpha = Math.max(0, (1 - progress) * 0.45);
-        ctx.save();
-        ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha})`;
+        ctx.fillStyle = `rgba(${this.color.r},${this.color.g},${this.color.b},${alpha})`;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
-        ctx.restore();
     }
 }
 
