@@ -1157,7 +1157,7 @@ Add directly before your closing \`</body>\` tag. Add \`data-autostart\` to laun
 
   <!-- 1-line CDN Drop-in -->
   <script 
-    src="https://cdn.jsdelivr.net/npm/@event-overlay/independence-day@1.0.5/dist/index.umd.js" 
+    src="https://cdn.jsdelivr.net/npm/@event-overlay/independence-day@${CURRENT_VERSION}/dist/index.umd.js" 
     data-autostart>
   </script>
 </body>
@@ -1167,7 +1167,7 @@ Add directly before your closing \`</body>\` tag. Add \`data-autostart\` to laun
 Or trigger manually via global \`window.IndependenceDayOverlay\`:
 
 \`\`\`html
-<script src="https://cdn.jsdelivr.net/npm/@event-overlay/independence-day@1.0.5/dist/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@event-overlay/independence-day@${CURRENT_VERSION}/dist/index.umd.js"></script>
 <script>
   window.IndependenceDayOverlay.start({
     maxKites: 8,
@@ -1591,7 +1591,7 @@ Include the standalone bundle via jsDelivr or unpkg before the closing \`</body>
 
   <!-- 1-line CDN Drop-in -->
   <script 
-    src="https://cdn.jsdelivr.net/npm/@event-overlay/holi@1.0.5/dist/index.umd.js" 
+    src="https://cdn.jsdelivr.net/npm/@event-overlay/holi@${CURRENT_VERSION}/dist/index.umd.js" 
     data-autostart>
   </script>
 </body>
@@ -1601,7 +1601,7 @@ Include the standalone bundle via jsDelivr or unpkg before the closing \`</body>
 Or trigger manually via the global \`window.HoliOverlay\` object:
 
 \`\`\`html
-<script src="https://cdn.jsdelivr.net/npm/@event-overlay/holi@1.0.5/dist/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@event-overlay/holi@${CURRENT_VERSION}/dist/index.umd.js"></script>
 <script>
   window.HoliOverlay.start({
     maxBalloons: 12,
