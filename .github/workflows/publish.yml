@@ -32,4 +32,8 @@ jobs:
         run: npm run build
 
       - name: Publish to NPM
-        run: npm publish --workspaces --access public --provenance
+        run: |
+          npm publish ./packages/core --access public --provenance || true
+          npm publish ./packages/diwali --access public --provenance || true
+          npm publish ./packages/holi --access public --provenance || true
+          npm publish ./packages/independence-day --access public --provenance || true
